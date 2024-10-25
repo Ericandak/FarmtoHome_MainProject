@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static '/assets/img/apple-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static '/assets/img/favicon.png' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>FarmToHome Seller License Authentication</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="{% static '/assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static '/assets/css/now-ui-kit.css' %}?v=1.1.0" rel="stylesheet" />
+    <style>
+        .content-wrapper {
+            padding-top: 7rem;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body class="profile-page sidebar-collapse">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-primary fixed-top navbar-transparent" color-on-scroll="400">
+        <div class="container">
+            <div class="navbar-translate">
+                <a class="navbar-brand" href="#" rel="tooltip" title="FarmToHome Seller Dashboard" data-placement="bottom">
+                    FarmToHome Seller
+                </a>
+                <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-bar bar1"></span>
+                    <span class="navbar-toggler-bar bar2"></span>
+                    <span class="navbar-toggler-bar bar3"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'orders:seller_dashboard' %}">
+                            <i class="now-ui-icons business_chart-pie-36"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sellerproductlist' %}">
+                            <i class="now-ui-icons shopping_cart-simple"></i> My Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="now-ui-icons users_single-02"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i> Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="now-ui-icons media-1_button-power"></i> Logout
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'license_authentication' %}">
+                            <i class="now-ui-icons business_badge"></i> License 
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    
+    <div class="wrapper">
+        <div class="page-header page-header-small" filter-color="orange">
+            <div class="page-header-image" data-parallax="true" style="background-image: url('{% static '/assets/img/bg5.jpg' %}');"></div>
+            <div class="container">
+                <div class="content-center">
+                    <h1 class="title">License Authentication</h1>
+                    <div class="text-center">
+                        <h3>Submit your selling license for approval</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 ml-auto mr-auto">
+                        {% if existing_request %}
+                            <div class="alert alert-info">
+                                <h4>License Request Status: {{ existing_request.get_status_display }}</h4>
+                                <p>Submitted on: {{ existing_request.created_at|date:"F d, Y" }}</p>
+                                {% if existing_request.status == 'pending' %}
+                                    <p>Your license is currently under review. We'll notify you once it's been processed.</p>
+                                {% elif existing_request.status == 'approved' %}
+                                    <p>Your license has been approved. You're all set to sell on our platform!</p>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <form id="licenseAuthForm" class="contact-form" method="POST" action="{% url 'license_authentication' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>License File (PDF or Image)</label>
+                                            <input type="file" class="form-control-file" name="license_file" id="license_file" required>
+                                            <p class="error-message" id="license_file_error"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Additional Comments (Optional)</label>
+                                            <textarea class="form-control" rows="4" placeholder="Any additional information about your license" name="comments" id="comments"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 ml-auto mr-auto text-center">
+                                        <button type="submit" class="btn btn-primary btn-round btn-lg">Submit License</button>
+                                    </div>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <footer class="footer footer-default">
+        <div class="container">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#">
+                            About Us
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Blog
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Contact Us
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="copyright">
+                &copy;
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>, FarmToHome. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+
+<!--   Core JS Files   -->
+<script src="{% static '/assets/js/core/jquery.3.2.1.min.js' %}" type="text/javascript"></script>
+<script src="{% static '/assets/js/core/popper.min.js' %}" type="text/javascript"></script>
+<script src="{% static '/assets/js/core/bootstrap.min.js' %}" type="text/javascript"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{% static '/assets/js/plugins/bootstrap-switch.js' %}"></script>
+<!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+<script src="{% static '/assets/js/plugins/nouislider.min.js' %}" type="text/javascript"></script>
+<!--  Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
+<script src="{% static '/assets/js/plugins/bootstrap-datepicker.js' %}" type="text/javascript"></script>
+<!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
+<script src="{% static '/assets/js/now-ui-kit.js' %}?v=1.1.0" type="text/javascript"></script>
+<script>
+    $(document).ready(function() {
+        function validateLicenseFile(value) {
+            if (!value) {
+                return 'Please select a license file.';
+            }
+            const allowedExtensions = /(\.pdf|\.jpg|\.jpeg|\.png)$/i;
+            if (!allowedExtensions.exec(value)) {
+                return 'Please upload a PDF or image file (jpg, jpeg, png).';
+            }
+            return null;
+        }
+
+        $('#license_file').on('change', function() {
+            const error = validateLicenseFile($(this).val());
+            if (error) {
+                $('#license_file_error').text(error).css('color', 'red');
+            } else {
+                $('#license_file_error').text('');
+            }
+        });
+
+        $('#licenseAuthForm').on('submit', function(e) {
+            const error = validateLicenseFile($('#license_file').val());
+            if (error) {
+                e.preventDefault();
+                $('#license_file_error').text(error).css('color', 'red');
+            }
+        });
+    });
+</script>
+</html>

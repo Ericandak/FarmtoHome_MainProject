@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static '/assets/img/apple-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static '/assets/img/favicon.png' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Seller Dashboard - FarmToHome</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+        name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="{% static '/assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static '/assets/css/now-ui-kit.css' %}?v=1.1.0" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card-body {
+            min-height: 250px;
+        }
+        </style>
+</head>
+
+<body class="profile-page sidebar-collapse">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-primary fixed-top navbar-transparent" color-on-scroll="400">
+        <div class="container">
+            <div class="navbar-translate">
+                <a class="navbar-brand" href="#" rel="tooltip" title="FarmToHome Seller Dashboard"
+                    data-placement="bottom">
+                    FarmToHome Seller
+                </a>
+                <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navigation" aria-controls="navigation-index" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-bar bar1"></span>
+                    <span class="navbar-toggler-bar bar2"></span>
+                    <span class="navbar-toggler-bar bar3"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="now-ui-icons business_chart-pie-36"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sellerproductlist' %}">
+                            <i class="now-ui-icons shopping_cart-simple"></i> My Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="now-ui-icons users_single-02"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i> Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="now-ui-icons media-1_button-power"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        <div class="page-header page-header-small" filter-color="orange">
+            <div class="page-header-image" data-parallax="true"
+                style="background-image: url('{% static '/assets/img/bg5.jpg' %}')"></div>
+            <div class="container">
+                <div class="content-center">
+                    <h1 class="title">Sales of {{ seller.username }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h5 class="card-category">Total Sales</h5>
+                                <h4 class="card-title">₹{{ total_sales }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h5 class="card-category">Total Orders</h5>
+                                <h4 class="card-title">{{ total_orders }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ordersChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h5 class="card-category">Top Selling Products</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    {% for product in top_products %}
+                                    <li>{{ product.name }} - {{ product.total_sales }} units</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-category">Recent Orders</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class=" text-primary">
+                                            <th>Order ID</th>
+                                            <th>Date</th>
+                                            <th>Customer</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                        </thead>
+                                        <tbody>
+                                            {% for order in recent_orders %}
+                                            <tr>
+                                                <td>{{ order.id }}</td>
+                                                <td>{{ order.order_date|date:"M d, Y" }}</td>
+                                                <td>{{ order.consumer.username }}</td>
+                                                <td>₹{{ order.total_amount }}</td>
+                                                <td>{{ order.delivery_status }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Generate Sales Report</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="get" action="{% url 'generate_sales_report' %}" class="mb-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="start_date">Start Date:</label>
+                                        <input type="date" id="start_date" name="start_date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="end_date">End Date:</label>
+                                        <input type="date" id="end_date" name="end_date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="report_type">Report Type:</label>
+                                        <select id="report_type" name="report_type" class="form-control" required>
+                                            <option value="csv">CSV</option>
+                                            <option value="pdf">PDF</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary mt-4">Generate Report</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer footer-default">
+        <div class="container">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#">
+                            About Us
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Blog
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Contact Us
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="copyright">
+                &copy;
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>, FarmToHome. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static '/assets/js/core/jquery.3.2.1.min.js' %}" type="text/javascript"></script>
+    <script src="{% static '/assets/js/core/popper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static '/assets/js/core/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static '/assets/js/plugins/bootstrap-switch.js' %}"></script>
+    <script src="{% static '/assets/js/plugins/nouislider.min.js' %}" type="text/javascript"></script>
+    <script src="{% static '/assets/js/plugins/bootstrap-datepicker.js' %}" type="text/javascript"></script>
+    <script src="{% static '/assets/js/now-ui-kit.js' %}?v=1.1.0" type="text/javascript"></script>
+    <script>
+        var salesData = {{ sales_data_json|safe }};
+        var salesDates = {{ sales_dates_json|safe }};
+        var orderData = {{ order_data_json|safe }};
+        var orderDates = {{ order_dates_json|safe }};
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                console.log('Sales Data:', salesData);
+                console.log('Sales Dates:', salesDates);
+                console.log('Order Data:', orderData);
+                console.log('Order Dates:', orderDates);
+        
+                if (salesData.length === 0 || salesDates.length === 0) {
+                    console.error('Sales data or dates are empty');
+                } else {
+                    var salesCtx = document.getElementById('salesChart').getContext('2d');
+                    new Chart(salesCtx, {
+                        type: 'line',
+                        data: {
+                            labels: salesDates,
+                            datasets: [{
+                                label: 'Sales',
+                                data: salesData,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            if (orderData.length === 0 || orderDates.length === 0) {
+            console.error('Order data or dates are empty');
+        } else {
+            var ordersCtx = document.getElementById('ordersChart').getContext('2d');
+            new Chart(ordersCtx, {
+                type: 'bar',
+                data: {
+                    labels: orderDates,
+                    datasets: [{
+                        label: 'Orders',
+                        data: orderData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error creating charts:', error);
+    }
+});
+</script>
+</body>
+
+</html>

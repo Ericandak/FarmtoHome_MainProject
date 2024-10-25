@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <title>FArmToHome</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'Products/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'Products/css/style.css' %}" rel="stylesheet">
+    <style>
+        .modal-backdrop {
+            opacity: 0.5;
+        }
+
+        #searchModal .modal-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #searchModal .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        #searchModal .modal-body {
+            padding-top: 0;
+        }
+
+        #searchModal .form-control {
+            border-radius: 20px 0 0 20px;
+            border: 1px solid #ced4da;
+        }
+
+        #searchModal .btn {
+            border-radius: 0 20px 20px 0;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%;
+            /* Creates a square aspect ratio */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* This ensures the image covers the entire container */
+            object-position: center;
+            /* Centers the image within the container */
+        }
+        
+        .star-rating {
+        font-size: 24px;
+        display: inline-block;
+    }
+    .star-rating .star {
+        color: #ddd;
+        cursor: pointer;
+    }
+    .star-rating .star.active {
+        color: #ffc107;
+    }
+    .review-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .review-date {
+        font-size: 0.9em;
+        color: #666;
+    }
+    .chat-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #18e430;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.chat-icon i {
+    color: white;
+    font-size: 24px;
+}
+
+.chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.chat-box.hidden {
+    display: none;
+}
+
+.chat-header {
+    background-color: #35d810;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.chat-form {
+    display: flex;
+    padding: 10px;
+}
+
+.chat-form input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+        </style>
+</head>
+
+<body>
+    <!-- Navbar start -->
+    <div class="container-fluid fixed-top">
+        <div class="container topbar bg-primary d-none d-lg-block">
+            <div class="d-flex justify-content-between">
+                <div class="top-info ps-2">
+                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
+                            class="text-white"></a></small>
+                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
+                            class="text-white">Farmtohome584@gmail.com</a></small>
+                </div>
+                <div class="top-link pe-2">
+                    <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
+                    <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
+                    <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
+                </div>
+            </div>
+        </div>
+        <div class="container px-0">
+            <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                <a href="{% url 'home' %}" class="navbar-brand">
+                    <h1 class="text-primary display-6">FarmtoHome</h1>
+                </a>
+                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars text-primary"></span>
+                </button>
+                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto">
+                        <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
+                        <a href="shop.html" class="nav-item nav-link">Shop</a>
+                        <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                            <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                                <a href="cart.html" class="dropdown-item">Cart</a>
+                                <a href="chackout.html" class="dropdown-item">Checkout</a>
+                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                                <a href="404.html" class="dropdown-item">404 Page</a>
+                            </div>
+                        </div>
+                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                    </div>
+                    <div class="d-flex m-3 me-0">
+                        <button
+                            class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
+                            data-bs-toggle="modal" data-bs-target="#searchModal"><i
+                                class="fas fa-search text-primary"></i></button>
+                        <a href="{% url 'usercart' %}" class="position-relative me-4 my-auto">
+                            <i class="fa fa-shopping-bag fa-2x"></i>
+                            <span
+                                class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                                style="top: -5px; left: 15px; height: 20px; min-width: 20px;">{{ cart_item_count }}</span>
+                        </a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hi,{{ username }}</a>
+                            <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                                <a href="{% url 'usercart' %}" class="dropdown-item">Cart</a>
+                                <a href="{% url 'profile_edit' %}" class="dropdown-item">User Profile</a>
+                                {% if has_seller_role %}
+                                <a href="{%url 'Sellerdetails' %}" class="dropdown-item">Switch to Seller</a>
+                                {% endif %}
+                                <form action="{% url 'logout' %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- <form action="{% url 'logout' %}" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit">
+                                            </button>
+                                        </form> -->
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="searchModalLabel">Search Products</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="searchForm" action="{% url 'search_results' %}" method="GET">
+                        <div class="input-group">
+                            <input type="search" name="q" class="form-control" placeholder="Enter keywords"
+                                aria-label="Search" required>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Search End -->
+
+
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Shop Detail</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item active text-white">Shop Detail</li>
+        </ol>
+    </div>
+    <!-- Single Page Header End -->
+
+
+    <!-- Single Product Start -->
+    <!-- Single Product Start -->
+    <div class="container-fluid py-5 mt-5">
+        <div class="container py-5">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-8 col-xl-9">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="border rounded product-image-container">
+                                {% if product.image %}
+                                <img src="{{ product.image.url }}" class="product-image" alt="{{ product.name }}">
+                                {% else %}
+                                <img src="{% static 'Products/img/default-product.jpg' %}" class="product-image"
+                                    alt="{{ product.name }}">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <h4 class="fw-bold mb-3">{{ product.name }}</h4>
+                            <p class="mb-3">Category: {{ product.category.name }}</p>
+                            <h5 class="fw-bold mb-3">₹{{ product.price }}</h5>
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="star-rating me-2" data-rating="{{ avg_rating }}">
+                                    {% for i in "12345" %}
+                                    <span class="star {% if forloop.counter <= avg_rating %}active{% elif forloop.counter <= avg_rating|add:0.5 %}half-active{% endif %}">&#9733;</span>
+                                    {% endfor %}
+                                </div>
+                                <span>({{ avg_rating|floatformat:1 }})</span>
+                            </div>
+                            <p class="mb-4">{{ product.description }}</p>
+                            <p class="text-primary">Sold By {{ product.seller.username }}</p>
+                            <form action="{% url 'add_to_cart' product.id %}" method="post">
+                                {% csrf_token %}
+                                <div class="input-group quantity mb-5" style="width: 100px;">
+                                </div>
+                                <button type="submit"
+                                    class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                </button>
+                                <a href="{% url 'seller_view' product.seller.id %}"
+                                class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                <i class="fa fa-user-shield me-2 text-primary"></i> Know Your Seller
+                            </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ... (keep the sidebar with categories and featured products) ... -->
+            </div>
+
+            <!-- Related Products Section -->
+            <h1 class="fw-bold mb-0">Related products</h1>
+            <div class="vesitable">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    {% for related_product in related_products %}
+                    <div class="col">
+                        <div
+                            class="border border-primary rounded position-relative vesitable-item h-100 d-flex flex-column">
+                            <a href="{% url 'product_detail' related_product.id %}" class="text-decoration-none">
+                                <div class="vesitable-img" style="height: 220px; overflow: hidden;">
+                                    {% if related_product.image %}
+                                    <img src="{{ related_product.image.url }}" class="img-fluid w-100 rounded-top"
+                                        alt="{{ related_product.name }}" style="object-fit: cover; height: 100%;">
+                                    {% else %}
+                                    <img src="{% static 'Products/img/default-product.jpg' %}"
+                                        class="img-fluid w-100 rounded-top" alt="{{ related_product.name }}"
+                                        style="object-fit: cover; height: 100%;">
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <div class="text-white bg-primary px-2 py-1 rounded position-absolute"
+                                style="top: 5px; right: 5px; font-size: 0.7rem;">{{ related_product.category.name }}
+                            </div>
+                            <div class="p-2 rounded-bottom d-flex flex-column flex-grow-1">
+                                <h5 class="fs-6 mb-1">
+                                    <a href="{% url 'product_detail' related_product.id %}"
+                                        class="text-dark text-decoration-none">
+                                        {{ related_product.name }}
+                                    </a>
+                                </h5>
+                                <p class="small mb-2" style="font-size: 0.75rem;">{{ related_product.description|truncatewords:8 }}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <p class="text-dark fw-bold mb-0" style="font-size: 0.9rem;">₹{{ related_product.price }}</p>
+                                    <a href="{% url 'add_to_cart' related_product.id %}"
+                                        class="btn btn-sm border border-secondary rounded-pill px-2 py-1 text-primary"
+                                        style="font-size: 0.75rem;">
+                                        <i class="fa fa-shopping-bag me-1 text-primary"></i> Add
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Single Product End -->
+    <!-- Review System Start -->
+    <div class="container mt-5">
+        <h2 class="mb-4">Customer Reviews</h2>
+
+        <!-- Display existing reviews -->
+        {% if reviews %}
+        {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <h5 class="mb-0">{{ review.user.username }}</h5>
+                    <div class="star-rating" data-rating="{{ review.rating }}">
+                        {% for i in "12345" %}
+                        <span class="star {% if i|add:'0' <= review.rating %}active{% endif %}">&#9733;</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <p class="mt-2 mb-2">{{ review.comment }}</p>
+                <small class="text-muted">{{ review.created_at|date:"F d, Y" }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No reviews yet. Be the first to review this product!</p>
+    {% endif %}
+        {% if user.is_authenticated %}
+        <h3 class="fw-bold mt-5 mb-3">Add Your Review</h3>
+        <form method="post" action="{% url 'add_review' product.id %}" id="review-form">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating:</label>
+                <div class="star-rating">
+                    {% for i in "12345" %}
+                        <span class="star" data-value="{{ forloop.counter }}">&#9733;</span>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="rating" id="rating" required>
+            </div>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment:</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    {% else %}
+        <p class="mt-5">Please <a href="{% url 'login' %}">log in</a> to leave a review.</p>
+    {% endif %}
+    </div>
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+        <div class="container py-5">
+            <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <a href="#">
+                            <h1 class="text-primary mb-0">Fruitables</h1>
+                            <p class="text-secondary mb-0">Fresh products</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="position-relative mx-auto">
+                            <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number"
+                                placeholder="Your Email">
+                            <button type="submit"
+                                class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white"
+                                style="top: 0; right: 0;">Subscribe Now</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="d-flex justify-content-end pt-3">
+                            <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Why People Like us!</h4>
+                        <p class="mb-4">typesetting, remaining essentially unchanged. It was
+                            popularised in the 1960s with the like Aldus PageMaker including of Lorem Ipsum.</p>
+                        <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Shop Info</h4>
+                        <a class="btn-link" href="">About Us</a>
+                        <a class="btn-link" href="">Contact Us</a>
+                        <a class="btn-link" href="">Privacy Policy</a>
+                        <a class="btn-link" href="">Terms & Condition</a>
+                        <a class="btn-link" href="">Return Policy</a>
+                        <a class="btn-link" href="">FAQs & Help</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Account</h4>
+                        <a class="btn-link" href="">My Account</a>
+                        <a class="btn-link" href="">Shop details</a>
+                        <a class="btn-link" href="">Shopping Cart</a>
+                        <a class="btn-link" href="">Wishlist</a>
+                        <a class="btn-link" href="">Order History</a>
+                        <a class="btn-link" href="">International Orders</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Contact</h4>
+                        <p>Address: 1429 Netus Rd, NY 48247</p>
+                        <p>Email: Example@gmail.com</p>
+                        <p>Phone: +0123 4567 8910</p>
+                        <p>Payment Accepted</p>
+                        <img src="img/payment.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright bg-dark py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your Site
+                            Name</a>, All right reserved.</span>
+                </div>
+                <div class="col-md-6 my-auto text-center text-md-end text-white">
+                    <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
+                    <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
+                    <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
+                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed By <a
+                        class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="chat-icon" class="chat-icon">
+        <i class="fas fa-comment"></i>
+    </div>
+    
+    <div id="chat-box" class="chat-box hidden">
+        <div class="chat-header">
+            <h5>Chat with Seller</h5>
+            <button id="close-chat">X</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <form id="chat-form" class="chat-form">
+            {% csrf_token %}
+            <input type="text" id="message-input" required placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <!-- Copyright End -->
+
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+            class="fa fa-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/lightbox/js/lightbox.min.js'%}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js'%}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+     
+    <!-- Star Rating Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const starRatings = document.querySelectorAll('.star-rating');
+            
+            starRatings.forEach(starRating => {
+                const stars = starRating.querySelectorAll('.star');
+                const ratingInput = starRating.closest('form') ? starRating.closest('form').querySelector('#rating') : null;
+        
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        if (ratingInput) {
+                            ratingInput.value = value;
+                        }
+                        updateStars(starRating, value);
+                    });
+        
+                    star.addEventListener('mouseover', function() {
+                        const value = this.getAttribute('data-value');
+                        updateStars(starRating, value);
+                    });
+        
+                    star.addEventListener('mouseout', function() {
+                        if (ratingInput) {
+                            updateStars(starRating, ratingInput.value);
+                        } else {
+                            // For display-only ratings, reset to the original rating
+                            const originalRating = starRating.getAttribute('data-rating');
+                            updateStars(starRating, originalRating);
+                        }
+                    });
+                });
+            });
+        
+            function updateStars(starRating, value) {
+                const stars = starRating.querySelectorAll('.star');
+                stars.forEach(star => {
+                    if (star.getAttribute('data-value') <= value) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+        });
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            const chatIcon = $('#chat-icon');
+            const chatBox = $('#chat-box');
+            const closeChat = $('#close-chat');
+            const chatForm = $('#chat-form');
+            const messageInput = $('#message-input');
+            const chatMessages = $('#chat-messages');
+            const receiverId = {{ product.seller.id }};// Assuming you have access to the seller's ID
+        
+            chatIcon.click(function() {
+                chatBox.toggleClass('hidden');
+                loadMessages();
+            });
+        
+            closeChat.click(function() {
+                chatBox.addClass('hidden');
+            });
+            function appendMessage(message) {
+            chatMessages.append('<p><strong>' + message.sender + ':</strong> ' + message.message + '</p>');
+            chatMessages.scrollTop(chatMessages[0].scrollHeight);
+}
+        
+            function loadMessages() {
+            $.get('{% url "get_messages" receiver_id=0 %}'.replace('0', receiverId), function(data) {
+            chatMessages.empty();
+            data.forEach(function(msg) {
+            appendMessage(msg);
+        });
+    });
+        }
+        
+            chatForm.submit(function(e) {
+            e.preventDefault();
+            $.post('{% url "chat" receiver_id=0 %}'.replace('0', receiverId), {
+            message: messageInput.val(),
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        function(data) {
+        if (data.status === 'success') {
+            appendMessage(data.message);
+            messageInput.val('');
+        }
+    });
+});
+        
+            setInterval(loadMessages, 5000);  // Reload messages every 5 seconds
+        });
+        </script>
+
+</body>
+</html>
