@@ -15,7 +15,6 @@ from PIL.ExifTags import TAGS
 from datetime import datetime,timedelta
 import io
 import imghdr
-import magic
 import re
 from django.conf import settings
 import os
@@ -85,13 +84,6 @@ def is_valid_image(image):
         return False
 
     # Check MIME type using python-magic
-    try:
-        mime = magic.from_buffer(file_content, mime=True)
-        if not mime.startswith('image/'):
-            return False
-    except Exception as e:
-        print(f"Error checking MIME type: {str(e)}")
-        return False
 
     return True
 
