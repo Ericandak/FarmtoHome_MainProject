@@ -1,10 +1,13 @@
-* b313fbb - Ericandak, 51 minutes ago : 2nd rev
-* e8e8f02 - Ericandak, 3 weeks ago : Before Notifications
-* fc1a00c - Ericandak, 4 weeks ago : Payment module for user and report generation
-* 4de441b - Ericandak, 6 weeks ago : Validation updation
-* f91967f - Ericandak, 6 weeks ago : 50%
-* 0752f0a - Ericandak, 7 weeks ago : Product search cart filter
-* fb0abd3 - Ericandak, 7 weeks ago :  seller Login,product app
-* c8e1201 - Ericandak, 7 weeks ago : seller Login
-* 9c62d8f - Ericandak, 3 months ago : Login Registration sign in with google
-* 5ff1610 - Ericandak, 3 months ago : Initial commit
+* 6965351 - Ericandak, 10 days ago : requirement updation3
+* 49c6b96 - Ericandak, 10 days ago : requirement updation2
+* 05e3e7c - Ericandak, 10 days ago : requirement updation
+* 7e2886b - Ericandak, 11 days ago : requirement new
+* 316bd10 - Ericandak, 11 days ago : requirement eew
+* 3e18c83 - Ericandak, 11 days ago : requirement eeeq
+* d62feee - Ericandak, 11 days ago : requirement eee
+* dfd076e - Ericandak, 11 days ago : requirement edit
+* 275a662 - Ericandak, 11 days ago : runtime delete
+* e06d6c1 - Ericandak, 11 days ago : requirement changes
+* 3ad4353 - Ericandak, 11 days ago : requirement changes
+* ecd853f - Ericandak, 11 days ago : runtime
+* af30999 - Ericandak, 11 days ago : host commit

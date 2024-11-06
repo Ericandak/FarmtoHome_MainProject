@@ -1,83 +1,54 @@
 import tensorflow as tf
-from tensorflow.keras import layers, models
+from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Set paths
-train_dir = r'D:\ajce notes\sem8\django\project docs\Training'
-test_dir = r'D:\ajce notes\sem8\django\project docs\Testing'
+# Load the saved model
+model = load_model('models/fruits_disease.weights.h5')
 
 # Set parameters
-img_height, img_width = 224, 224  # Adjust based on your model's requirements
+img_height, img_width = 100, 100
 batch_size = 32
+test_dir = r'D:\ajce notes\sem8\django\archive\fruits-360_dataset_100x100\fruits-360\Test'
 
-# Create data generators
-train_datagen = ImageDataGenerator(
-    rescale=1./255,
-    rotation_range=20,
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    shear_range=0.2,
-    zoom_range=0.2,
-    horizontal_flip=True,
-    fill_mode='nearest'
-)
-
+# Create data generator for testing
 test_datagen = ImageDataGenerator(rescale=1./255)
-
-train_generator = train_datagen.flow_from_directory(
-    train_dir,
-    target_size=(img_height, img_width),
-    batch_size=batch_size,
-    class_mode='categorical'
-)
-
 test_generator = test_datagen.flow_from_directory(
     test_dir,
     target_size=(img_height, img_width),
     batch_size=batch_size,
-    class_mode='categorical'
+    class_mode='categorical',
+    shuffle=False
 )
 
-# Get the number of classes
-num_classes = len(train_generator.class_indices)
-print(f"Number of classes: {num_classes}")
-
-# Print class indices
-print("Class indices:")
-for class_name, class_index in train_generator.class_indices.items():
-    print(f"{class_name}: {class_index}")
-
-# Create model (you can use transfer learning here)
-base_model = tf.keras.applications.MobileNetV2(input_shape=(img_height, img_width, 3),
-                                               include_top=False,
-                                               weights='imagenet')
-base_model.trainable = False
-
-model = models.Sequential([
-    base_model,
-    layers.GlobalAveragePooling2D(),
-    layers.Dense(128, activation='relu'),
-    layers.Dropout(0.2),
-    layers.Dense(num_classes, activation='softmax')
-])
-
-# Compile model
-model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
-
-# Train model
-history = model.fit(
-    train_generator,
-    epochs=25,
-    validation_data=test_generator
-)
+# Get class mapping
+class_indices = test_generator.class_indices
+class_names = list(class_indices.keys())
 
 # Evaluate model
+print("Evaluating model...")
 test_loss, test_acc = model.evaluate(test_generator)
-print(f'Test accuracy: {test_acc}')
+print(f'Test accuracy: {test_acc:.4f}')
 
-# Save model
-model.save('fruits_disease_model22.keras', save_format='keras')
+# Make predictions on a batch of test images
+print("\nMaking predictions...")
+batch_x, batch_y = next(test_generator)
+predictions = model.predict(batch_x)
+
+# Display some sample predictions
+plt.figure(figsize=(15, 10))
+for i in range(min(9, len(batch_x))):
+    plt.subplot(3, 3, i + 1)
+    plt.imshow(batch_x[i])
+    true_class = class_names[np.argmax(batch_y[i])]
+    pred_class = class_names[np.argmax(predictions[i])]
+    color = 'green' if true_class == pred_class else 'red'
+    plt.title(f'True: {true_class}\nPred: {pred_class}', color=color)
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
+
+# Print model summary
+print("\nModel Architecture:")
+model.summary()
