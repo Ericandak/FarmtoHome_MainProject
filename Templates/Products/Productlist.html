@@ -34,33 +34,41 @@
     <nav class="navbar navbar-expand-lg bg-primary fixed-top navbar-transparent" color-on-scroll="400">
         <div class="container">
             <div class="navbar-translate">
-                <a class="navbar-brand" href="#" rel="tooltip" title="FarmToHome Seller Dashboard"
-                    data-placement="bottom">
+                <a class="navbar-brand" href="#" rel="tooltip" title="FarmToHome Seller Dashboard" data-placement="bottom">
                     FarmToHome Seller
                 </a>
-                <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navigation" aria-controls="navigation-index" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-bar bar1"></span>
                     <span class="navbar-toggler-bar bar2"></span>
+                    <span class="navbar-toggler-bar bar3"></span>
                     <span class="navbar-toggler-bar bar3"></span>
                 </button>
             </div>
             <div class="collapse navbar-collapse justify-content-end" id="navigation">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'orders:seller_dashboard' %}">
+                        <a class="nav-link" href="#">
                             <i class="now-ui-icons business_chart-pie-36"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'sellerproductlist' %}">
+                        <a class="nav-link" href="#">
                             <i class="now-ui-icons shopping_cart-simple"></i> My Products
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="now-ui-icons users_single-02"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i> Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'license_authentication' %}">
-                            <i class="now-ui-icons business_badge"></i> License
+                            <i class="now-ui-icons business_badge"></i> License 
                         </a>
                     </li>
                     <li class="nav-item">
@@ -157,7 +165,7 @@
                                 <a href="{% url 'productedit' product.id %}" class="btn btn-primary">Edit</a>
                                 <form method="post" action="{% url 'delete_product' product.id %}" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
                                 </form>
                             </div>
                         </div>
@@ -214,6 +222,13 @@
             </div>
         </div>
     </footer>
+    <script>
+        function confirmDelete(event) {
+            if (!confirm('Are you sure you want to delete this product?')) {
+                event.preventDefault();
+            }
+        }
+    </script>
 </body>
 
 <!--   Core JS Files   -->

@@ -104,7 +104,7 @@ def start_delivery(request, order_id):
     messages.success(request, 'Delivery started successfully')
     return redirect('Delivery:deliverindex')  # Redirect back to the delivery index page
 
-@login_required 
+@login_required
 def complete_delivery(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     delivery = get_object_or_404(Delivery, order=order, delivery_person=request.user)

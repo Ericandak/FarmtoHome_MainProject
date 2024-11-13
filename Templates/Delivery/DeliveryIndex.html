@@ -75,26 +75,10 @@
             </div>
         </div>
     </nav>
-
     <!-- End Navbar -->
 
     <div class="wrapper">
         <div class="section">
-            {% if messages %}
-            <div class="container-fluid py-3">
-                <div class="container">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-pill" role="alert">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <span>{{ message }}</span>
-                                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
             <div class="container">
                 <div class="row">
                     {% if pending_orders %}
@@ -105,7 +89,7 @@
                                         <h5 class="card-title">Order #{{ order.id }}</h5>
                                         <p class="card-text">Customer: {{ order.consumer.get_full_name }}</p>
                                         <p class="card-text">Status: {{ order.get_delivery_status_display }}</p>
-                                        <p class="card-text">Total: ₹{{ order.total_amount }}</p>
+                                        <p class="card-text">Total: ${{ order.total_amount }}</p>
                                         <p class="card-text">Address: {{ order.shipping_address.address }}, {{ order.shipping_address.city }}</p>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderModal{{ order.id }}">
                                             View Details

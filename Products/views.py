@@ -4,7 +4,6 @@ from .models import Product,Category,Stock,Cart_table,CartItem_table,Review
 from django.contrib import messages
 from django.urls import reverse
 from django.utils import timezone
-from .utils import predict_fruit_disease
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
@@ -149,10 +148,10 @@ def add_product(request):
             )
             stock.save()
             messages.success(request, 'Product added successfully.')
-            return redirect('SellerHome')
+            return redirect('add_product')
         except Exception as e:
             messages.error(request, f'Error saving product: {str(e)}')
-            return render(request, 'Products/Productlist.html', {'categories': categories, 'error': 'Error saving product'})
+            return render(request, 'Products/SellerIndex.html', {'categories': categories, 'error': 'Error saving product'})
 
     return render(request, 'Products/SellerIndex.html', {'categories': categories, 'username': request.user.username})
 
@@ -464,46 +463,46 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def process_image(request):
-    if request.method == 'POST' and request.FILES.get('image'):
-        image = request.FILES['image']
-        temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
-        os.makedirs(temp_dir, exist_ok=True)
-        image_path = os.path.join(temp_dir, 'temp_image.jpg')
+# def process_image(request):
+#     if request.method == 'POST' and request.FILES.get('image'):
+#         image = request.FILES['image']
+#         temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
+#         os.makedirs(temp_dir, exist_ok=True)
+#         image_path = os.path.join(temp_dir, 'temp_image.jpg')
 
-        try:
-            # Save the image temporarily
-            with open(image_path, 'wb+') as destination:
-                for chunk in image.chunks():
-                    destination.write(chunk)
+#         try:
+#             # Save the image temporarily
+#             with open(image_path, 'wb+') as destination:
+#                 for chunk in image.chunks():
+#                     destination.write(chunk)
             
-            logger.info(f"Processing image: {image.name}")
-            predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
+#             logger.info(f"Processing image: {image.name}")
+#             predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
             
-            prediction_result = {
-                'predicted_class': predicted_class,
-                'confidence': round(confidence * 100, 2),  # Convert to percentage and round to 2 decimal places
-                'is_defected': is_defected,
-                'condition': condition
-            }
-            request.session['prediction_result'] = prediction_result
-            logger.info(f"Prediction result: {prediction_result}")
-            messages.success(request, 'Image processed successfully!')
+#             prediction_result = {
+#                 'predicted_class': predicted_class,
+#                 'confidence': round(confidence * 100, 2),  # Convert to percentage and round to 2 decimal places
+#                 'is_defected': is_defected,
+#                 'condition': condition
+#             }
+#             request.session['prediction_result'] = prediction_result
+#             logger.info(f"Prediction result: {prediction_result}")
+#             messages.success(request, 'Image processed successfully!')
 
-        except Exception as e:
-            logger.error(f"Error processing image: {str(e)}", exc_info=True)
-            messages.error(request, f'Error processing image: {str(e)}')
+#         except Exception as e:
+#             logger.error(f"Error processing image: {str(e)}", exc_info=True)
+#             messages.error(request, f'Error processing image: {str(e)}')
 
-        finally:
-            # Clean up: remove the temporary image file
-            if os.path.exists(image_path):
-                os.remove(image_path)
-                logger.info(f"Temporary image removed: {image_path}")
+#         finally:
+#             # Clean up: remove the temporary image file
+#             if os.path.exists(image_path):
+#                 os.remove(image_path)
+#                 logger.info(f"Temporary image removed: {image_path}")
 
-        return redirect('sellerproductlist')
+#         return redirect('sellerproductlist')
 
-    messages.error(request, 'No image file received.')
-    return redirect('sellerproductlist')
+#     messages.error(request, 'No image file received.')
+#     return redirect('sellerproductlist')
 
 def product_detailforuser(request, slug):
        product = get_object_or_404(Product, slug=slug)
