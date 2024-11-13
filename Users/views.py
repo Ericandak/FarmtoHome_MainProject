@@ -3,7 +3,7 @@
 from django.shortcuts import render,redirect,reverse,get_object_or_404
 from django.views.decorators.cache import never_cache
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+from django.db.models import Q,Sum
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,JsonResponse
 import pyotp
@@ -21,7 +21,7 @@ from allauth.account.utils import user_username
 from django.templatetags.static import static
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth,TruncDate
-from orders.models import Order
+from orders.models import Order,OrderItem
 from django.template.loader import render_to_string
 import json
 from django.conf import settings
@@ -256,7 +256,10 @@ def auth_logout(request):
 def home(request):
     user = request.user
     cart_item_count = 0
-    products = Product.objects.filter(is_active=True)  # Fetch all active products
+    satisfied_customers = User.objects.count() 
+    quality_of_service = Review.objects.aggregate(Avg('rating'))['rating__avg'] or 0 
+    available_products = Product.objects.filter(is_active=True).count()  
+    products = Product.objects.filter(is_active=True)
     categories = Category.objects.all()
     categories_with_products = Category.objects.filter(
         Exists(Product.objects.filter(category=OuterRef('pk'), is_active=True))
@@ -271,12 +274,23 @@ def home(request):
     username = request.session.get('username') or user_username(user)
     if not username:
         username = user.email.split('@')[0] if user.email else 'User'
-    
+    best_selling_products = (
+    OrderItem.objects
+    .select_related('product')  # Use select_related to fetch related product data
+    .values('product__id', 'product__name', 'product__image', 'product__price')  # Include image and price
+    .annotate(total_quantity=Sum('quantity'))  # Sum the quantities sold
+    .order_by('-total_quantity')[:5]  # Get top 5 best-selling products
+    )
+
     context = {
         'username': username,
         'products': products,
         'categories': categories_with_products,
-        'cart_item_count': cart_item_count
+        'cart_item_count': cart_item_count,
+        'best_selling_products': best_selling_products,
+        'satisfied_customers': satisfied_customers,
+        'quality_of_service': quality_of_service,
+        'available_products': available_products
     }
     
     return render(request, 'Products/index.html', context)
