@@ -19,6 +19,7 @@ urlpatterns = [
     path('live-search/', views.live_search, name='live_search'),
     path('product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
     path('product/<int:product_id>/add_review/', views.add_review, name='add_review'),
-    # path('process-image/', views.process_image, name='process_image'),
+    path('process-image/', views.process_image, name='process_image'),
     path('product/<slug:slug>/', views.product_detailforuser, name='product_detailforuser'),
+    path('voice-search/', views.voice_search, name='voice_search'),
 ]

@@ -5187,3 +5187,1163 @@ Not Found: /home/img/payment.png
 Not Found: /home/img/testimonial-1.jpg
 Not Found: /favicon.ico
 Not Found: /products/search/img/payment.png
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /products/product/14/img/payment.png
+Not Found: /seller/13/img/payment.png
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /products/product/9/img/payment.png
+Not Found: /adminlog/map.html
+Not Found: /assets/js/plugins/chartjs.min.js
+Not Found: /assets/js/core/jquery.min.js
+Not Found: /assets/js/core/popper.min.js
+Not Found: /assets/js/core/bootstrap.min.js
+Not Found: /assets/js/plugins/bootstrap-notify.js
+Not Found: /assets/js/plugins/perfect-scrollbar.jquery.min.js
+Not Found: /assets/js/now-ui-dashboard.min.js
+Not Found: /assets/demo/demo.js
+Watching for file changes with StatReloader
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /products/product/7/img/payment.png
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Internal Server Error: /home/
+Traceback (most recent call last):
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py", line 282, in home
+    return render(request, 'Products/index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\templatetags\static.py", line 171, in do_static
+    return StaticNode.handle_token(parser, token)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\templatetags\static.py", line 145, in handle_token
+    path = parser.compile_filter(bits[1])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 698, in __init__
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '/css/Chatwidget.css'' from 'assets/css/Chatwidget.css''
+Internal Server Error: /home/
+Traceback (most recent call last):
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py", line 282, in home
+    return render(request, 'Products/index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\templatetags\static.py", line 171, in do_static
+    return StaticNode.handle_token(parser, token)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\templatetags\static.py", line 145, in handle_token
+    path = parser.compile_filter(bits[1])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\erick\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\template\base.py", line 698, in __init__
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '/css/Chatwidget.css'' from 'Products/css/Chatwidget.css''
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/{% url "chatbot_message" %}
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /chatbot/message/
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/{% url "chatbot_message" %}
+Not Found: /home/{% url "chatbot_message" %}
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /home/{% url "chatbot_message" %}
+Not Found: /delivery/jobs/img/payment.png
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/{% url "chatbot_message" %}
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /home/{% url "chatbot_message" %}
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /users/chatbot/message/
+Not Found: /users/chatbot/message/
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\urls.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /users/chatbot/message/
+Not Found: /users/chatbot/message/
+Not Found: /users/chatbot/message/
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Users\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /products/search/img/payment.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /products/search/img/payment.png
+Not Found: /products/search/img/payment.png
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /products/search/img/payment.png
+Internal Server Error: /products/search/
+Traceback (most recent call last):
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py", line 404, in search_results
+    results = (results | Product.objects.filter(fuzzy_q)).distinct()
+               ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\db\models\query.py", line 485, in __or__
+    combined.query.combine(other.query, sql.OR)
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\db\models\sql\query.py", line 687, in combine
+    raise TypeError("Cannot combine a unique query with a non-unique query.")
+TypeError: Cannot combine a unique query with a non-unique query.
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /products/search/img/payment.png
+Not Found: /products/search/img/payment.png
+Watching for file changes with StatReloader
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /products/search/img/payment.png
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Forbidden (CSRF token from POST incorrect.): /Login/
+Internal Server Error: /products/sellerproductlist/
+Traceback (most recent call last):
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py", line 177, in productlist
+    return render(request, 'Products/Productlist.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'process_image' not found. 'process_image' is not a valid view function or pattern name.
+Internal Server Error: /products/sellerproductlist/
+Traceback (most recent call last):
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py", line 177, in productlist
+    return render(request, 'Products/Productlist.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ajce notes\sem8\django\env2\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'process_image' not found. 'process_image' is not a valid view function or pattern name.
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\urls.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py changed, reloading.
+Watching for file changes with StatReloader
+Processing image: photo_2025-01-15_12-02-14.jpg
+Error processing image: name 'predict_fruit_disease' is not defined
+Traceback (most recent call last):
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py", line 522, in process_image
+    predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
+                                                          ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'predict_fruit_disease' is not defined
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+Processing image: River-Edge-Dandeli-River-Resort-9.jpg
+Error processing image: name 'predict_fruit_disease' is not defined
+Traceback (most recent call last):
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py", line 522, in process_image
+    predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
+                                                          ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'predict_fruit_disease' is not defined
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+Processing image: WhatsApp-Image-2022-10-03-at-12.23.01-PM.jpeg
+Error processing image: name 'predict_fruit_disease' is not defined
+Traceback (most recent call last):
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py", line 522, in process_image
+    predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
+                                                          ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'predict_fruit_disease' is not defined
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+Processing image: Class diagram (6).png
+Error processing image: name 'predict_fruit_disease' is not defined
+Traceback (most recent call last):
+  File "D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py", line 522, in process_image
+    predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
+                                                          ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'predict_fruit_disease' is not defined
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\ajce notes\sem8\django\FarmToHomeProject\Products\views.py changed, reloading.
+Watching for file changes with StatReloader
+Processing image: River-Edge-Dandeli-River-Resort-9.jpg
+Prediction result: {'predicted_class': 'Orange__Rotten', 'confidence': 96.04, 'is_defected': True, 'condition': 'Rotten'}
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+Processing image: images (2).jpg
+Prediction result: {'predicted_class': 'Apple__Rotten', 'confidence': 93.61, 'is_defected': True, 'condition': 'Rotten'}
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+Processing image: images (1).jpg
+Prediction result: {'predicted_class': 'Banana__Healthy', 'confidence': 66.72, 'is_defected': False, 'condition': 'Healthy'}
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+Watching for file changes with StatReloader
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /products/product/9/img/payment.png
+Not Found: /orders/my-orders/img/payment.png
+Processing image: photo_2024-09-22_15-47-10.jpg
+Prediction result: {'predicted_class': 'Banana__Rotten', 'confidence': 99.77, 'is_defected': True, 'condition': 'Rotten'}
+Temporary image removed: D:\ajce notes\sem8\django\FarmToHomeProject\media\temp\temp_image.jpg
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /products/product/1/img/payment.png
+Not Found: /products/product/5/img/payment.png
+Not Found: /products/product/14/img/payment.png
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /products/product/8/img/payment.png
+Watching for file changes with StatReloader
+Not Found: /home/img/vegetable-item-3.png
+Not Found: /home/img/vegetable-item-1.jpg
+Not Found: /home/img/featur-3.jpg
+Not Found: /home/img/featur-2.jpg
+Not Found: /home/img/featur-1.jpg
+Not Found: /home/img/vegetable-item-6.jpg
+Not Found: /home/img/vegetable-item-4.jpg
+Not Found: /home/img/vegetable-item-5.jpg
+Not Found: /home/img/best-product-1.jpg
+Not Found: /home/img/baner-1.png
+Not Found: /home/img/best-product-2.jpg
+Not Found: /home/img/best-product-3.jpg
+Not Found: /home/img/best-product-4.jpg
+Not Found: /home/img/best-product-5.jpg
+Not Found: /home/img/best-product-6.jpg
+Not Found: /home/img/fruite-item-2.jpg
+Not Found: /home/img/fruite-item-1.jpg
+Not Found: /home/img/fruite-item-3.jpg
+Not Found: /home/img/fruite-item-4.jpg
+Not Found: /home/img/testimonial-1.jpg
+Not Found: /home/img/payment.png
+Not Found: /favicon.ico
+Not Found: /products/usercart/img/payment.png
+Not Found: /orders/checkout/img/payment.png

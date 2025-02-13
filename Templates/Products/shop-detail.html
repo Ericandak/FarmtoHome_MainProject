@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load i18n %}
 
 <head>
     <meta charset="utf-8">
@@ -183,6 +184,11 @@
                             class="text-white"></a></small>
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
                             class="text-white">Farmtohome584@gmail.com</a></small>
+                    <small class="me-3">
+                                <button id="translateToggle" class="btn btn-sm bg-primary text-white border-0">
+                                    <span id="translateText">Translate to മലയാളം</span>
+                                </button>
+                    </small>
                 </div>
                 <div class="top-link pe-2">
                     <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
@@ -310,8 +316,14 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <h4 class="fw-bold mb-3">{{ product.name }}</h4>
-                            <p class="mb-3">Category: {{ product.category.name }}</p>
+                            <h4 class="fw-bold mb-3">
+                                <span class="original-text">{{ product.name }}</span>
+                                <span class="translated-text" style="display: none;">{{ translated_name }}</span>
+                            </h4>
+                            <p class="mb-4">
+                                <span class="original-text">{{ product.description }}</span>
+                                <span class="translated-text" style="display: none;">{{ translated_description }}</span>
+                            </p>
                             <h5 class="fw-bold mb-3">₹{{ product.price }}</h5>
                             <div class="d-flex align-items-center mb-4">
                                 <div class="star-rating me-2" data-rating="{{ avg_rating }}">
@@ -668,6 +680,45 @@
             setInterval(loadMessages, 5000);  // Reload messages every 5 seconds
         });
         </script>
+<!-- Add this before closing body tag -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const translateToggle = document.getElementById('translateToggle');
+        const translateText = document.getElementById('translateText');
+        const originalTexts = document.querySelectorAll('.original-text');
+        const translatedTexts = document.querySelectorAll('.translated-text');
+        
+        let isTranslated = false;
+    
+        translateToggle.addEventListener('click', function() {
+            isTranslated = !isTranslated;
+            
+            originalTexts.forEach(text => {
+                text.style.display = isTranslated ? 'none' : 'inline';
+            });
+            
+            translatedTexts.forEach(text => {
+                text.style.display = isTranslated ? 'inline' : 'none';
+            });
+            
+            translateText.textContent = isTranslated ? 'Show English' : 'Translate to മലയാളം';
+        });
+    });
+    </script>
+    
+    <style>
+        .translated-text {
+            display: none;
+        }
+        #translateToggle {
+            cursor: pointer;
+            padding: 2px 10px;
+            border-radius: 4px;
+        }
+        #translateToggle:hover {
+            opacity: 0.9;
+        }
+    </style>
 
 </body>
 </html>

@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'Products.middleware.TranslationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -95,6 +96,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'FarmToHomeProject.wsgi.application'
+# Gemini AI Configuration
+GEMINI_API_KEY = 'AIzaSyBtCzE1R2RmM5cSZgQiD8XMaMV8gzY2Rns'  # Get this from Google AI Studio
 
 
 # Database
@@ -227,3 +230,17 @@ PASSWORD_RESET_TIMEOUT=300
 #Payment
 RAZORPAY_KEY_ID = 'rzp_test_sUutjryqHIWPLJ'  # Your Test Key ID
 RAZORPAY_KEY_SECRET = 'ztDzF6ipQxKWATrUdM7YLvJn'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# Translation settings
+TRANSLATION_CACHE_TIMEOUT = 60 * 60 * 24  # 24 hours

@@ -29,11 +29,16 @@ from notifications.models import Notification
 from django.utils.html import strip_tags
 from django.utils import timezone
 from .models import LicenseAuthenticationRequest
-from datetime import timedelta
+from datetime import timedelta,datetime
 from django.db.models import Avg,Count
 from django.contrib.auth.decorators import user_passes_test
 from Delivery.models import JobApplication
 from django.db import transaction
+from django.http import JsonResponse
+from .chatbot import FarmToHomeChatbot,ChatbotSingleton
+from .models import ChatBotMessage
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 
@@ -72,7 +77,6 @@ def UserRegistration(request):
     return render(request, 'Users/Registration.html',context)
     
 
-
 def send_otp_email(request):
     # Retrieve registration data from session
     registration_data = request.session.get('registration_data')
@@ -99,8 +103,6 @@ def send_otp_email(request):
     }
 
     return render(request, 'Users/send_otp_email.html', context)
-
-
 
 def verify_otp(request):
     if request.method == 'POST':
@@ -353,8 +355,6 @@ def load_states(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
-
-
 @login_required
 def addressentry(request, state_id):
     if request.method == 'POST':
@@ -446,7 +446,6 @@ def profile_update(request):
         'countries': countries
     }
     return render(request, 'Users/User_profile.html', context)
-
 
 @login_required
 def SellerProfile(request):
@@ -698,8 +697,6 @@ def adminlog(request):
     else:
         return redirect('Login')
 
-
-
 @login_required
 def adminupdate(request):
     user = request.user
@@ -757,6 +754,9 @@ def deactivate_user(request, user_id):
 @login_required
 def chat_view(request, receiver_id):
     receiver = get_object_or_404(User, id=receiver_id)
+    is_bot = request.GET.get('bot', False)
+    if is_bot:
+        return redirect('chatbot_view')
     if request.method == 'POST':
         message = request.POST.get('message')
         chat_message = ChatMessage.objects.create(sender=request.user, receiver=receiver, message=message)
@@ -820,10 +820,6 @@ def get_chat_users(request):
            print(f"Error in get_chat_users: {str(e)}")  # Debugging line
            return JsonResponse({'error': 'An error occurred'}, status=500)
 
-
-
-
-
 @login_required
 def license_authentication(request):
     existing_request = LicenseAuthenticationRequest.objects.filter(
@@ -857,8 +853,6 @@ def license_authentication(request):
             messages.error(request, 'Please upload a license file.')
 
     return render(request, 'Products/SellerLicense.html')
-
-
 
 @user_passes_test(lambda u: u.is_staff)
 def license_requests(request):
@@ -990,10 +984,55 @@ def approve_job(request, application_id):
         messages.error(request, f"An error occurred while processing the application: {str(e)}")
         return redirect('Delivery:job_requests')
 
-
 def reject_job(request, application_id):
     application = get_object_or_404(JobApplication, id=application_id)
     application.status = 'rejected'
     application.save()
     messages.success(request, 'Job application rejected successfully!')
     return redirect('Delivery:job_requests')
+
+@login_required
+def chatbot_view(request):
+    # Get chat history with bot
+    chat_history = ChatBotMessage.objects.filter(user=request.user)
+    context = {
+        'chat_history': chat_history,
+        'username': request.user.username
+    }
+    return render(request, 'Users/chatbot.html', context)
+
+@login_required
+@ensure_csrf_cookie
+@require_http_methods(["POST"])
+def chatbot_message(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_message = data.get('message', '')
+            
+            # Initialize chatbot (or better, make it a singleton)
+            chatbot = ChatbotSingleton.get_instance()
+            
+            # Get response from Gemini
+            bot_response = chatbot.get_response(user_message)
+            
+            # Save the conversation
+            chat_message = ChatBotMessage.objects.create(
+                user=request.user,
+                message=user_message,
+                response=bot_response,
+                sender='USER'
+            )
+            
+            return JsonResponse({
+                'message': bot_response,
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+            
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return JsonResponse({
+                'error': 'An error occurred while processing your request'
+            }, status=500)
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)

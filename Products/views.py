@@ -8,9 +8,14 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 import json
-from django.db.models import Q
+from .translation_service import TranslationService
+from fuzzywuzzy import fuzz
+from django.db.models import Q, Case, When, Value, IntegerField
 from django.template.loader import render_to_string
 from PIL import Image
+from django.utils import translation
+from django.shortcuts import redirect
+from django.views.decorators.http import require_POST
 from PIL.ExifTags import TAGS
 from datetime import datetime,timedelta
 import io
@@ -18,6 +23,11 @@ import imghdr
 import re
 from django.conf import settings
 import os
+import base64
+from django.views.decorators.csrf import csrf_exempt
+from .voice_recognition import VoiceRecognitionService
+import speech_recognition as sr
+from .utils import predict_fruit_disease 
 
 def extract_date_from_filename(filename):
     # This pattern looks for date formats like YYYYMMDD_HHMMSS or YYYY-MM-DD_HH-MM-SS
@@ -147,11 +157,15 @@ def add_product(request):
                 quantity=int(quantity)
             )
             stock.save()
+            translator = TranslationService()
+            translator.translate_text(name, 'ml')  # Cache the name translation
+            translator.translate_text(description, 'ml') 
             messages.success(request, 'Product added successfully.')
             return redirect('add_product')
         except Exception as e:
             messages.error(request, f'Error saving product: {str(e)}')
             return render(request, 'Products/SellerIndex.html', {'categories': categories, 'error': 'Error saving product'})
+
 
     return render(request, 'Products/SellerIndex.html', {'categories': categories, 'username': request.user.username})
 
@@ -308,6 +322,12 @@ def product_detail(request, product_id):
     user=request.user
     product = get_object_or_404(Product, id=product_id)
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:6]
+    translator = TranslationService()
+    current_language = request.LANGUAGE_CODE or 'ml'
+    translated_data = {
+        'name': translator.translate_text(product.name, current_language),
+        'description': translator.translate_text(product.description, current_language),
+    }
     try:
         cart = Cart_table.objects.get(user=user)
         cart_item_count = cart.items.count()
@@ -317,26 +337,56 @@ def product_detail(request, product_id):
         'product': product,
         'related_products': related_products,
         'username':user.username,
-        'cart_item_count': cart_item_count
+        'cart_item_count': cart_item_count,
+        'translated_name': translated_data['name'],
+        'translated_description': translated_data['description'],
     }
     return render(request, 'Products/shop-detail.html', context)
 
 
+
+
 @login_required
 def search_results(request):
-    user=request.user
-    query = request.GET.get('q')
+    user = request.user
+    query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
     sort = request.GET.get('sort', 'name')
-    results=Product.objects.all()
+    results = Product.objects.all()
+
     if query:
-        results = Product.objects.filter(
-            Q(name__icontains=query) | 
-            Q(description__icontains=query) |
-            Q(category__name__icontains=query)
-        ).distinct()
+        # Clean the query: remove extra spaces and convert to lowercase
+        cleaned_query = ' '.join(query.split()).lower()
+        query_words = cleaned_query.split()
+
+        # Create a combined query for all words
+        combined_query = Q()
+        for word in query_words:
+            combined_query |= (
+                Q(name__icontains=word) |
+                Q(description__icontains=word) |
+                Q(category__name__icontains=word)
+            )
+
+        # Apply the search filter
+        results = results.filter(combined_query).distinct()
+
+        # Add relevance scoring
+        results = results.annotate(
+            relevance=Case(
+                When(name__iexact=cleaned_query, then=Value(100)),
+                When(name__istartswith=cleaned_query, then=Value(90)),
+                When(name__icontains=cleaned_query, then=Value(80)),
+                When(category__name__icontains=cleaned_query, then=Value(70)),
+                When(description__icontains=cleaned_query, then=Value(60)),
+                default=Value(50),
+                output_field=IntegerField(),
+            )
+        )
+
+    # Apply filters
     if category:
         results = results.filter(category_id=category)
 
@@ -345,6 +395,8 @@ def search_results(request):
 
     if max_price:
         results = results.filter(price__lte=max_price)
+
+    # Apply sorting
     if sort == 'name':
         results = results.order_by('name')
     elif sort == '-name':
@@ -353,27 +405,33 @@ def search_results(request):
         results = results.order_by('price')
     elif sort == '-price':
         results = results.order_by('-price')
-    results = results.order_by(sort)
+    elif query:  # If searching, prioritize by relevance
+        results = results.order_by('-relevance', sort)
+    else:
+        results = results.order_by(sort)
 
-    categories = Category.objects.all()
+    # Get cart information
     try:
         cart = Cart_table.objects.get(user=user)
         cart_item_count = cart.items.count()
     except Cart_table.DoesNotExist:
         cart_item_count = 0
 
+    categories = Category.objects.all()
+    
     context = {
         'results': results,
         'query': query,
         'categories': categories,
-        'sort': sort, 
-        'username':user.username,
-        'cart_item_count': cart_item_count # Add this line to pass the current sort to the template
-
+        'sort': sort,
+        'username': user.username,
+        'cart_item_count': cart_item_count
     }
+
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         html = render_to_string('Products/search_results_partial.html', context)
         return JsonResponse({'html': html, 'query': query})
+
     return render(request, 'Products/search_results.html', context)
 
 def live_search(request):
@@ -458,51 +516,51 @@ def product_detail(request, product_id):
     })
 
 
-# from Products.utils import predict_fruit_disease
+from Products.utils import predict_fruit_disease
 import logging
 
 logger = logging.getLogger(__name__)
 
-# def process_image(request):
-#     if request.method == 'POST' and request.FILES.get('image'):
-#         image = request.FILES['image']
-#         temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
-#         os.makedirs(temp_dir, exist_ok=True)
-#         image_path = os.path.join(temp_dir, 'temp_image.jpg')
+def process_image(request):
+    if request.method == 'POST' and request.FILES.get('image'):
+        image = request.FILES['image']
+        temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
+        os.makedirs(temp_dir, exist_ok=True)
+        image_path = os.path.join(temp_dir, 'temp_image.jpg')
 
-#         try:
-#             # Save the image temporarily
-#             with open(image_path, 'wb+') as destination:
-#                 for chunk in image.chunks():
-#                     destination.write(chunk)
+        try:
+            # Save the image temporarily
+            with open(image_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
             
-#             logger.info(f"Processing image: {image.name}")
-#             predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
+            logger.info(f"Processing image: {image.name}")
+            predicted_class, confidence, is_defected, condition = predict_fruit_disease(image_path)
             
-#             prediction_result = {
-#                 'predicted_class': predicted_class,
-#                 'confidence': round(confidence * 100, 2),  # Convert to percentage and round to 2 decimal places
-#                 'is_defected': is_defected,
-#                 'condition': condition
-#             }
-#             request.session['prediction_result'] = prediction_result
-#             logger.info(f"Prediction result: {prediction_result}")
-#             messages.success(request, 'Image processed successfully!')
+            prediction_result = {
+                'predicted_class': predicted_class,
+                'confidence': round(confidence * 100, 2),  # Convert to percentage and round to 2 decimal places
+                'is_defected': is_defected,
+                'condition': condition
+            }
+            request.session['prediction_result'] = prediction_result
+            logger.info(f"Prediction result: {prediction_result}")
+            messages.success(request, 'Image processed successfully!')
 
-#         except Exception as e:
-#             logger.error(f"Error processing image: {str(e)}", exc_info=True)
-#             messages.error(request, f'Error processing image: {str(e)}')
+        except Exception as e:
+            logger.error(f"Error processing image: {str(e)}", exc_info=True)
+            messages.error(request, f'Error processing image: {str(e)}')
 
-#         finally:
-#             # Clean up: remove the temporary image file
-#             if os.path.exists(image_path):
-#                 os.remove(image_path)
-#                 logger.info(f"Temporary image removed: {image_path}")
+        finally:
+            # Clean up: remove the temporary image file
+            if os.path.exists(image_path):
+                os.remove(image_path)
+                logger.info(f"Temporary image removed: {image_path}")
 
-#         return redirect('sellerproductlist')
+        return redirect('sellerproductlist')
 
-#     messages.error(request, 'No image file received.')
-#     return redirect('sellerproductlist')
+    messages.error(request, 'No image file received.')
+    return redirect('sellerproductlist')
 
 def product_detailforuser(request, slug):
        product = get_object_or_404(Product, slug=slug)
@@ -510,3 +568,75 @@ def product_detailforuser(request, slug):
            'product': product,
        }
        return render(request, 'Products/shop-detail.html', context)
+
+@csrf_exempt
+def voice_search(request):
+    if request.method == 'POST':
+        try:
+            # Get audio data from request
+            audio_data = request.FILES.get('audio')
+            
+            if not audio_data:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'No audio data received'
+                }, status=400)
+
+            # Convert audio data to format speech_recognition can use
+            recognizer = sr.Recognizer()
+            
+            # Read audio file
+            with sr.AudioFile(audio_data) as source:
+                audio = recognizer.record(source)
+            
+            # Initialize service
+            voice_service = VoiceRecognitionService()
+            
+            # Get recognition result
+            result = voice_service.recognize_speech(audio)
+            
+            if result['success']:
+                # Perform product search with recognized text
+                products = Product.objects.filter(name__icontains=result['text'])
+                
+                # Prepare product data for response
+                product_data = [{
+                    'id': product.id,
+                    'name': product.name,
+                    'price': str(product.price),
+                    'image_url': product.image.url if product.image else None,
+                } for product in products]
+                
+                return JsonResponse({
+                    'success': True,
+                    'text': result['text'],
+                    'products': product_data
+                })
+            else:
+                return JsonResponse(result, status=400)
+                
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=500)
+    
+    return JsonResponse({
+        'success': False,
+        'error': 'Invalid request method'
+    }, status=405)
+
+
+
+@require_POST
+def change_language(request):
+    language = request.POST.get('language', 'en')
+    response = redirect(request.META.get('HTTP_REFERER', '/'))
+    
+    # Activate the new language
+    translation.activate(language)
+    
+    # Set the language cookie
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+    
+    return response

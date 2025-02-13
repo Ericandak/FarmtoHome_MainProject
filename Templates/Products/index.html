@@ -30,6 +30,9 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'Products/css/style.css' %}" rel="stylesheet">
+<!-- Update these lines in the head section -->
+<link href="{% static 'Products/css/Chatwidget.css' %}" rel="stylesheet">
+<script src="{% static 'Products/js/Chatwidget.js' %}" defer></script>
 
     <style>
         .product-card {
@@ -280,6 +283,7 @@
                     </div>
                 </div>
             </nav>
+            
         </div>
     </div>
     <!-- Navbar End -->
@@ -297,12 +301,19 @@
                     <form id="searchForm" action="{% url 'search_results' %}" method="GET">
                         <div class="input-group">
                             <input type="search" name="q" id="searchInput" class="form-control"
-                                placeholder="Enter keywords" aria-label="Search" required>
+                                placeholder="Enter keywords or click microphone to speak" aria-label="Search" required>
+                            <!-- Add voice search button -->
+                            <button class="btn btn-outline-secondary" type="button" id="voiceSearchButton" title="Voice Search">
+                                <i class="fas fa-microphone"></i>
+                            </button>
                             <button class="btn btn-primary" type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
                     </form>
+                    <!-- Add voice feedback element -->
+                    <div id="voiceFeedback" class="voice-feedback hidden mt-2"></div>
+                    <!-- Add loading indicator -->
                     <div id="liveSearchResults" class="mt-3"></div>
                 </div>
             </div>
@@ -1110,6 +1121,55 @@
         </div>
     </div>
     <!-- Tastimonial End -->
+    <div class="chat-widget">
+        <button class="chat-toggle-btn" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </button>
+        
+        <div id="chatContainer" class="chat-container" style="display: none;">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-header-user">
+                    <img src="{% static 'img/bot-avatar.png' %}" alt="Bot Avatar" class="chat-avatar">
+                    <div class="chat-user-info">
+                        <div class="chat-username">Farm to Home Assistant</div>
+                        <div class="chat-status">Online</div>
+                    </div>
+                </div>
+                <button class="close-chat" onclick="toggleChat()">×</button>
+            </div>
+            
+            <!-- Bot Chat Interface -->
+            <div class="chat-messages" id="botMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        <p>Hi 👋 How can I help you?</p>
+                        <div class="quick-replies">
+                            <button onclick="sendQuickReply('Track my order')">Track my order 📦</button>
+                            <button onclick="sendQuickReply('How do I track my order?')">How do I track my order (FAQ)?</button>
+                            <button onclick="sendQuickReply('Contact seller')">Contact seller</button>
+                            <button onclick="sendQuickReply('Product information')">Product information</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-tools">
+                    <button class="tool-button"><i class="far fa-image"></i></button>
+                    <button class="tool-button"><i class="far fa-paperclip"></i></button>
+                    <button class="tool-button"><i class="far fa-smile"></i></button>
+                </div>
+                <div class="chat-input-wrapper">
+                    <input type="text" id="botMessageInput" placeholder="Type your message...">
+                    <button class="send-button" onclick="sendBotMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Footer Start -->
@@ -1233,6 +1293,11 @@
         var LIVE_SEARCH_URL = '{% url "live_search" %}';
     </script>
     <script src="{% static 'commonjs.js' %}"></script>
+    <script>
+        // Define the chatbot URL using Django's URL template tag
+        const CHATBOT_URL = "{% url 'chatbot_message' %}";
+    </script>
+    <script src="{% static 'Products/js/voiceSearch.js' %}"></script>
 </body>
 
 </html>

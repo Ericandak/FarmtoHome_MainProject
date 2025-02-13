@@ -56,5 +56,7 @@ urlpatterns=[
     path('seller/<int:seller_id>/', views.seller_view, name='seller_view'),
     path('approve_job/<int:application_id>/', views.approve_job, name='approve_job'),
     path('reject_job/<int:application_id>/', views.reject_job, name='reject_job'),
+    path('chatbot/message/', views.chatbot_message, name='chatbot_message'),
+    path('chatbot/', views.chatbot_view, name='chatbot_view'),
 
 ]

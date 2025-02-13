@@ -84,3 +84,18 @@ class LicenseAuthenticationRequest(models.Model):
 
     def __str__(self):
         return f"License request for {self.seller.username} - {self.status}"
+    
+class ChatBotMessage(models.Model):
+    SENDER_CHOICES = (
+        ('USER', 'User'),
+        ('BOT', 'Bot'),
+    )
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bot_messages')
+    message = models.TextField()
+    response = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    sender = models.CharField(max_length=5, choices=SENDER_CHOICES)
+    
+    class Meta:
+        ordering = ['timestamp']
