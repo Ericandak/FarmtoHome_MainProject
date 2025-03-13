@@ -30,4 +30,6 @@ urlpatterns = [
     path('complete_delivery/<int:order_id>/', views.complete_delivery, name='complete_delivery'),
     path('fail_delivery/<int:delivery_id>/', views.fail_delivery, name='fail_delivery'),
     path('order_history/', views.order_history, name='order_history'),
+    path('update-pincodes/', views.update_delivery_pincodes, name='update_pincodes'),
+    path('update_location/',views.update_location,name="update_location")
 ]

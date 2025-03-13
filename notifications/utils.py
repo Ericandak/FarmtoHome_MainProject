@@ -30,3 +30,27 @@ def notify_admin(notification_type, message):
                 }),
             },
         )
+def notify_milestone_achievement(user, milestone_level, coupon_code):
+    """Send notification for milestone achievement"""
+    message = f"Congratulations! You've reached {milestone_level} orders milestone! 🎉 Use coupon code: {coupon_code}"
+    
+    notification = Notification.objects.create(
+        user=user,
+        notification_type='milestone',
+        message=message
+    )
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"user_{user.id}",
+        {
+            "type": "send_notification",
+            "message": json.dumps({
+                "id": notification.id,
+                "type": "milestone",
+                "message": message,
+                "milestone_level": milestone_level,
+                "coupon_code": coupon_code
+            }),
+        },
+    )

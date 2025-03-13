@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 from . import views
 from django.contrib.auth import views as auth_views
 
+app_name = 'Products'
+
 urlpatterns = [
     path('add/', views.add_product, name='add_product'),
     path('seller-home/', views.seller_home, name='seller_home'),
@@ -22,4 +24,5 @@ urlpatterns = [
     path('process-image/', views.process_image, name='process_image'),
     path('product/<slug:slug>/', views.product_detailforuser, name='product_detailforuser'),
     path('voice-search/', views.voice_search, name='voice_search'),
+    path('analyze-crop/', views.analyze_crop_health, name='analyze_crop'),
 ]

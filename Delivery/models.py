@@ -13,15 +13,15 @@ class JobApplication(models.Model):
     resume = models.FileField(upload_to='resumes/')
     email = models.EmailField(max_length=254,null=True,blank=True)
     phone_number = models.CharField(max_length=15,null=True,blank=True)
-    preferred_city = models.CharField(max_length=100)
-    applied_at = models.DateTimeField(auto_now_add=True)
+    preferred_pincode = models.CharField(max_length=10)
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
         default='pending'
     )
+    applied_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return f"{self.name} - {self.preferred_city}"
+        return f"{self.name} - {self.preferred_pincode}"
     
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -66,4 +66,30 @@ class Delivery(models.Model):
         self.notes = reason
         self.order.delivery_status = 'pending'
         self.order.save()
+        self.save()
+class DeliveryPerson(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='delivery_profile')
+    primary_pincode = models.CharField(max_length=10)
+    secondary_pincode = models.CharField(max_length=10, null=True, blank=True)
+    current_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    current_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    last_location_update = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        if self.secondary_pincode:
+            return f"{self.user.get_full_name()} - {self.primary_pincode}, {self.secondary_pincode}"
+        return f"{self.user.get_full_name()} - {self.primary_pincode}"
+
+    def get_active_pincodes(self):
+        pincodes = [self.primary_pincode]
+        if self.secondary_pincode:
+            pincodes.append(self.secondary_pincode)
+        return pincodes
+
+    def update_location(self, latitude, longitude):
+        self.current_latitude = latitude
+        self.current_longitude = longitude
         self.save()

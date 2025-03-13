@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.db import transaction, OperationalError
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.contrib import messages
@@ -11,69 +11,103 @@ from Users.models import ShippingAddress, Address_table, State
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 from notifications.utils import notify_admin
+from django.shortcuts import render
+from .models import Milestone, UserMilestone
+from .utils import check_order_milestone
+from django.conf import settings
+import time
 
 
 User = get_user_model()
 @login_required
 @transaction.atomic
 def checkout(request):
-    try:
-        cart = Cart_table.objects.get(user=request.user)
-        cart_items = CartItem_table.objects.filter(cart=cart)
-    except Cart_table.DoesNotExist:
-        return redirect('Products:usercart')
+    max_attempts = 3
+    attempt = 0
+    
+    while attempt < max_attempts:
+        try:
+            with transaction.atomic():
+                cart = Cart_table.objects.get(user=request.user)
+                cart_items = CartItem_table.objects.filter(cart=cart)
+                
+                if not cart_items.exists():
+                    messages.error(request, 'Your cart is empty')
+                    return redirect('Products:usercart')
 
-    if not cart_items.exists():
-        return redirect('Products:usercart')
+                if request.method == 'POST':
+                    # Validate location data
+                    latitude = request.POST.get('latitude')
+                    longitude = request.POST.get('longitude')
+                    
+                    if not (latitude and longitude):
+                        messages.error(request, 'Please select a delivery location on the map')
+                        return redirect('orders:checkout')
 
-    try:
-        existing_address = Address_table.objects.get(user=request.user)
-    except Address_table.DoesNotExist:
-        existing_address = None
+                    use_existing_address = request.POST.get('use_existing_address') == 'on'
+                    
+                    if use_existing_address:
+                        existing_address = Address_table.objects.filter(user=request.user).first()
+                        if existing_address:
+                            shipping_data = {
+                                'full_name': f"{request.user.first_name} {request.user.last_name}",
+                                'address': existing_address.address,
+                                'city': existing_address.city,
+                                'zip_code': existing_address.zip_code,
+                                'state_id': existing_address.state.id,
+                                'latitude': latitude,
+                                'longitude': longitude
+                            }
+                        else:
+                            messages.error(request, 'No existing address found')
+                            return redirect('orders:checkout')
+                    else:
+                        try:
+                            state = State.objects.get(id=request.POST.get('state'))
+                            shipping_data = {
+                                'full_name': request.POST.get('full_name'),
+                                'address': request.POST.get('address'),
+                                'city': request.POST.get('city'),
+                                'zip_code': request.POST.get('zip_code'),
+                                'state_id': state.id,
+                                'latitude': latitude,
+                                'longitude': longitude
+                            }
+                        except State.DoesNotExist:
+                            messages.error(request, 'Invalid state selected')
+                            return redirect('orders:checkout')
 
-    if request.method == 'POST':
-        use_existing_address = request.POST.get('use_existing_address') == 'on'
-        
-        if use_existing_address and existing_address:
-            shipping_data = {
-                'full_name': f"{request.user.first_name} {request.user.last_name}",
-                'address': existing_address.address,
-                'city': existing_address.city,
-                'zip_code': existing_address.zip_code,
-                'state_id': existing_address.state.id,  # Store state ID instead of State object
-            }
-        else:
-            state = State.objects.get(id=request.POST.get('state'))
-            shipping_data = {
-                'full_name': request.POST.get('full_name'),
-                'address': request.POST.get('address'),
-                'city': request.POST.get('city'),
-                'zip_code': request.POST.get('zip_code'),
-                'state_id': state.id,  # Store state ID instead of State object
-            }
+                    if all(shipping_data.values()):
+                        order = process_order(request, shipping_data)
+                        if order:
+                            return initiate_payment(request, order.id)
+                        
+                    messages.error(request, 'Please fill in all required fields')
 
-        if all(shipping_data.values()):
-            # Store shipping data in session for later use
-            request.session['shipping_data'] = shipping_data
-
-            # Process the order
-            order = process_order(request, shipping_data)
-            if order:
-                # Initiate payment
-                return initiate_payment(request, order.id)
-            else:
-                return redirect('Products:usercart')
-        else:
-            messages.error(request, 'Please fill in all required fields.')
-
-    states = State.objects.all()
-    context = {
-        'cart_items': cart_items,
-        'total': sum(item.subtotal for item in cart_items),
-        'existing_address': existing_address,
-        'states': states,
-    }
-    return render(request, 'orders/checkout.html', context)
+                context = {
+                    'cart_items': cart_items,
+                    'total': sum(item.subtotal for item in cart_items),
+                    'existing_address': Address_table.objects.filter(user=request.user).first(),
+                    'states': State.objects.all(),
+                    'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+                }
+                return render(request, 'orders/checkout.html', context)
+                
+        except OperationalError as e:
+            if 'database is locked' in str(e):
+                attempt += 1
+                if attempt < max_attempts:
+                    time.sleep(0.5)  # Wait before retrying
+                    continue
+            messages.error(request, 'Transaction error. Please try again.')
+            return redirect('Products:usercart')
+            
+        except Cart_table.DoesNotExist:
+            messages.error(request, 'Your cart is empty')
+            return redirect('Products:usercart')
+            
+    messages.error(request, 'Service temporarily unavailable. Please try again.')
+    return redirect('Products:usercart')
 
 
 @login_required
@@ -107,46 +141,66 @@ def order_payment_callback(request):
 
 @transaction.atomic
 def process_order(request, shipping_data):
-    cart = Cart_table.objects.get(user=request.user)
-    cart_items = CartItem_table.objects.filter(cart=cart)
+    max_attempts = 3
+    attempt = 0
     
-    # Check stock availability
-    for cart_item in cart_items:
-        stock = Stock.objects.get(product=cart_item.product)
-        if stock.quantity < cart_item.quantity:
-            messages.error(request, f'Not enough stock for {cart_item.product.name}. Please update your cart.')
+    while attempt < max_attempts:
+        try:
+            with transaction.atomic():
+                # Create shipping address
+                shipping_address = ShippingAddress.objects.create(
+                    user=request.user,
+                    **shipping_data
+                )
+
+                cart = Cart_table.objects.select_for_update().get(user=request.user)
+                cart_items = CartItem_table.objects.select_for_update().filter(cart=cart)
+                
+                # Verify stock availability
+                for cart_item in cart_items:
+                    stock = Stock.objects.select_for_update().get(product=cart_item.product)
+                    if stock.quantity < cart_item.quantity:
+                        raise ValueError(f'Not enough stock for {cart_item.product.name}')
+
+                # Create order
+                order = Order.objects.create(
+                    consumer=request.user,
+                    shipping_address=shipping_address,
+                    total_amount=sum(item.subtotal for item in cart_items)
+                )
+                if order.status == 'completed':
+                    user_milestone=check_order_milestone(request.user)
+                    if user_milestone:
+                        messages.success(
+                        request,
+                        f"🎉 Congratulations! You've unlocked a {user_milestone.milestone.discount_percentage}% discount! "
+                        f"Use code: {user_milestone.coupon_code}"
+            )
+
+                # Create order items
+                for cart_item in cart_items:
+                    OrderItem.objects.create(
+                        order=order,
+                        product=cart_item.product,
+                        quantity=cart_item.quantity,
+                        total_price=cart_item.subtotal
+                    )
+
+                return order
+
+        except OperationalError as e:
+            if 'database is locked' in str(e):
+                attempt += 1
+                if attempt < max_attempts:
+                    time.sleep(0.5)
+                    continue
+            raise
+            
+        except Exception as e:
+            messages.error(request, f'Error processing order: {str(e)}')
             return None
 
-    # Get the State object from the ID
-    state = State.objects.get(id=shipping_data['state_id'])
-
-    # Create shipping address
-    shipping_address = ShippingAddress.objects.create(
-        user=request.user,
-        full_name=shipping_data['full_name'],
-        address=shipping_data['address'],
-        city=shipping_data['city'],
-        zip_code=shipping_data['zip_code'],
-        state=state  # Use the State object here
-    )
-
-    # Create the order
-    order = Order.objects.create(
-        consumer=request.user,
-        shipping_address=shipping_address,
-        total_amount=sum(item.subtotal for item in cart_items)
-    )
-
-    # Create order items
-    for cart_item in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            product=cart_item.product,
-            quantity=cart_item.quantity,
-            total_price=cart_item.subtotal
-        )
-
-    return order
+    return None
 
 def order_confirmation(request,order_id):
     order = Order.objects.get(id=order_id)
@@ -253,3 +307,24 @@ def seller_dashboard(request):
     }
 
     return render(request, 'orders/sellerdashboard.html', context)
+
+def milestone_progress(request):
+    user = request.user
+    order_count = user.orders.filter(status='Completed').count()
+    milestones = Milestone.objects.all()
+    achieved_milestones = UserMilestone.objects.filter(user=user)
+    
+    # Get active (unused) coupons
+    active_coupons = UserMilestone.objects.filter(
+        user=user,
+        is_used=False,
+        expiry_date__gt=timezone.now()
+    )
+
+    context = {
+        'order_count': order_count,
+        'milestones': milestones,
+        'achieved_milestones': achieved_milestones,
+        'active_coupons': active_coupons
+    }
+    return render(request, 'Orders/milestone_progress.html', context)

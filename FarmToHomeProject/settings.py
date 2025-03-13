@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'notifications',
     'channels',
     'Delivery',
+    'blogs',
     'django.contrib.sites',  
     'allauth',
     'allauth.account',
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'Products.middleware.TranslationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -166,7 +168,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'farmtohome584@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'phka wyby uygi bnsj'
+EMAIL_HOST_PASSWORD = 'mkdd gjfx hgyx mrwh'
 SITE_ID = 2
 
 ACCOUNT_EMAIL_REQUIRED = True
@@ -244,3 +246,6 @@ CACHES = {
 
 # Translation settings
 TRANSLATION_CACHE_TIMEOUT = 60 * 60 * 24  # 24 hours
+
+# Add this with your other settings
+GOOGLE_MAPS_API_KEY = 'AIzaSyD6WEdgWp8xJ6USrXVGoGVEyj7Cf7iPWbM'

@@ -84,13 +84,14 @@
                     {% if pending_orders %}
                         {% for order in pending_orders %}
                             <div class="col-md-4">
-                                <div class="card">
+                                <div class="card" data-order-location="{{ order.shipping_address.latitude }},{{ order.shipping_address.longitude }}">
                                     <div class="card-body">
                                         <h5 class="card-title">Order #{{ order.id }}</h5>
                                         <p class="card-text">Customer: {{ order.consumer.get_full_name }}</p>
                                         <p class="card-text">Status: {{ order.get_delivery_status_display }}</p>
-                                        <p class="card-text">Total: ${{ order.total_amount }}</p>
+                                        <p class="card-text">Total: ₹{{ order.total_amount }}</p>
                                         <p class="card-text">Address: {{ order.shipping_address.address }}, {{ order.shipping_address.city }}</p>
+                                        <p class="card-text distance-info">Calculating distance...</p>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderModal{{ order.id }}">
                                             View Details
                                         </button>
@@ -135,7 +136,7 @@
                                         <h5 class="card-title">Order #{{ order.id }}</h5>
                                         <p class="card-text"><strong>Customer:</strong> {{ order.consumer.get_full_name }}</p>
                                         <p class="card-text"><strong>Status:</strong> {{ order.get_delivery_status_display }}</p>
-                                        <p class="card-text"><strong>Total:</strong> ${{ order.total_amount }}</p>
+                                        <p class="card-text"><strong>Total:</strong> ₹{{ order.total_amount }}</p>
                                         <p class="card-text"><strong>Address:</strong> {{ order.shipping_address.address }}, {{ order.shipping_address.city }}</p>
                                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#orderModal{{ order.id }}">
                                             View Details
@@ -212,6 +213,155 @@
             </div>
         </div>
     </footer>
+
+    <!-- Add this right after the navbar -->
+    <div class="container mt-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Your Delivery Areas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Primary Pincode: <strong>{{ delivery_person.primary_pincode }}</strong></p>
+                        {% if delivery_person.secondary_pincode %}
+                            <p>Secondary Pincode: <strong>{{ delivery_person.secondary_pincode }}</strong></p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#updatePincodesModal">
+                            Update Delivery Areas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this before the closing body tag -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=geometry"></script>
+    <script>
+    let watchId;
+    const updateInterval = 30000; // Update every 30 seconds
+
+    function startLocationTracking() {
+        if (navigator.geolocation) {
+            watchId = navigator.geolocation.watchPosition(
+                updateDeliveryPersonLocation,
+                handleLocationError,
+                { enableHighAccuracy: true }
+            );
+        }
+    }
+
+    function updateDeliveryPersonLocation(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        // Send location update to server
+        fetch('{% url "Delivery:update_location" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: `latitude=${latitude}&longitude=${longitude}`
+        });
+
+        // Update distances for all orders
+        updateOrderDistances(latitude, longitude);
+    }
+
+    function updateOrderDistances(currentLat, currentLng) {
+        const orderCards = document.querySelectorAll('[data-order-location]');
+        orderCards.forEach(card => {
+            const [orderLat, orderLng] = card.dataset.orderLocation.split(',');
+            const distance = calculateDistance(
+                currentLat, currentLng,
+                parseFloat(orderLat), parseFloat(orderLng)
+            );
+            card.querySelector('.distance-info').textContent = `Distance: ${distance.toFixed(2)} km`;
+        });
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const p1 = new google.maps.LatLng(lat1, lon1);
+        const p2 = new google.maps.LatLng(lat2, lon2);
+        // Return distance in kilometers
+        return google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000;
+    }
+
+    function handleLocationError(error) {
+        console.error('Error getting location:', error);
+    }
+
+    // Start tracking when page loads
+    document.addEventListener('DOMContentLoaded', startLocationTracking);
+    </script>
+
+    <!-- Modal for updating pincodes -->
+    <div class="modal fade" id="updatePincodesModal" tabindex="-1" aria-labelledby="updatePincodesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'Delivery:update_pincodes' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updatePincodesModalLabel">Update Delivery Areas</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group mb-3">
+                            <label for="primary_pincode">Primary Pincode (Required)</label>
+                            <select class="form-control" id="primary_pincode" name="primary_pincode" required>
+                                {% for pincode in available_pincodes %}
+                                    <option value="{{ pincode }}" {% if pincode == delivery_person.primary_pincode %}selected{% endif %}>
+                                        {{ pincode }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="secondary_pincode">Secondary Pincode (Optional)</label>
+                            <select class="form-control" id="secondary_pincode" name="secondary_pincode">
+                                <option value="">None</option>
+                                {% for pincode in available_pincodes %}
+                                    <option value="{{ pincode }}" {% if pincode == delivery_person.secondary_pincode %}selected{% endif %}>
+                                        {{ pincode }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Areas</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            // Initialize Bootstrap modal
+            $('.modal').modal({
+                show: false
+            });
+        
+            // Prevent selecting same pincode for primary and secondary
+            $('#secondary_pincode').on('change', function() {
+                var primaryPincode = $('#primary_pincode').val();
+                var secondaryPincode = $(this).val();
+                
+                if (secondaryPincode === primaryPincode) {
+                    alert('Secondary pincode must be different from primary pincode');
+                    $(this).val('');
+                }
+            });
+        
+            // Start location tracking
+            startLocationTracking();
+        });
+    </script>
 </body>
 
 <!--   Core JS Files   -->

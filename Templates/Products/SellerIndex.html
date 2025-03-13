@@ -160,7 +160,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'sellerproductlist' %}">
+                        <a class="nav-link" href="{% url 'Products:sellerproductlist' %}">
                             <i class="now-ui-icons shopping_cart-simple"></i> My Products
                         </a>
                     </li>
@@ -170,8 +170,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i> Settings
+                        <a class="nav-link" href="{% url 'blogs:create_post' %}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i> Create Blogs
                         </a>
                     </li>
                     <li class="nav-item">
@@ -198,7 +198,7 @@
                 <div class="content-center">
                     <h1 class="title">Welcome, {{ username }}!</h1>
                     <div class="text-center">
-                        <a href="{% url 'sellerproductlist' %}" class="btn btn-primary btn-round btn-lg">View My
+                        <a href="{% url 'Products:sellerproductlist' %}" class="btn btn-primary btn-round btn-lg">View My
                             Products</a>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                     <div class="col-md-8 ml-auto mr-auto">
                         <h2 class="title text-center">Add New Product</h2>
                         {% if license_status == 'approved' %}
-                        <form id="addProductForm" class="contact-form" method="POST" action="{% url 'add_product' %}"
+                        <form id="addProductForm" class="contact-form" method="POST" action="{% url 'Products:add_product' %}"
                             enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="row">

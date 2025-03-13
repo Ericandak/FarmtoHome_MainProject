@@ -17,8 +17,8 @@
                     </div>
                     <div class="text-end">
                         <h4 class="mb-1">₹{{ product.price }}</h4>
-                        <a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm">View Details</a>
-                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-primary btn-sm">Add to Cart</a>
+                        <a href="{% url 'Products:product_detail' product.id %}" class="btn btn-primary btn-sm">View Details</a>
+                        <a href="{% url 'Products:add_to_cart' product.id %}" class="btn btn-outline-primary btn-sm">Add to Cart</a>
                     </div>
                 </div>
             </div>

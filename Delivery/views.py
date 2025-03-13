@@ -12,21 +12,23 @@ from orders.models import Order
 from .models import JobApplication
 from Users.models import ShippingAddress
 from django.db.models import Q
+from .models import DeliveryPerson
+from django.conf import settings
 
 def jobs(request):
-    cities = Address_table.objects.values_list('city', flat=True).distinct()
+    # Get unique pincodes from addresses
+    pincodes = Address_table.objects.values_list('zip_code', flat=True).distinct()
     pending_application = None
     if request.user.is_authenticated:
         user_application = JobApplication.objects.filter(user=request.user).order_by('-applied_at').first()
-
-    print(user_application.status)
     
     context = {
-        'cities': cities,
+        'pincodes': pincodes,
         'user_application': user_application,
         'user_application_status': user_application.status if user_application else None,
     }
-    return render(request, 'Delivery/jobs.html',context)
+    return render(request, 'Delivery/jobs.html', context)
+
 @login_required
 def apply_job(request):
     if request.method == 'POST':
@@ -34,11 +36,17 @@ def apply_job(request):
         resume = request.FILES.get('resume')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
-        city = request.POST.get('city')
+        pincode = request.POST.get('pincode')  # Changed from city
         
-        
-        # Save the application (you'll need to create a JobApplication model)
-        JobApplication.objects.create(user=request.user, name=name, resume=resume, email=email, phone_number=phone_number, preferred_city=city,status='pending')
+        JobApplication.objects.create(
+            user=request.user,
+            name=name,
+            resume=resume,
+            email=email,
+            phone_number=phone_number,
+            preferred_pincode=pincode,  # Changed from preferred_city
+            status='pending'
+        )
         
         messages.success(request, 'Your application has been submitted successfully and is pending review.')
         return redirect('Delivery:jobs')
@@ -57,40 +65,58 @@ def deliverindex(request):
     user_email = request.user.email
     try:
         job_application = JobApplication.objects.get(email=user_email, status='approved')
-        assigned_city = job_application.preferred_city
-    except JobApplication.DoesNotExist:
-        print("No job application found")
-        # Handle the case where no job application is found
-        assigned_city = None
-    if assigned_city:
-        print("City is assigned")
-        # Filter pending orders for the assigned city
+        delivery_person, created = DeliveryPerson.objects.get_or_create(
+            user=request.user,
+            defaults={'primary_pincode': job_application.preferred_pincode}
+        )
+        
+        # Get orders for both pincodes
+        pincode_filter = Q(shipping_address__zip_code=delivery_person.primary_pincode)
+        if delivery_person.secondary_pincode:
+            pincode_filter |= Q(shipping_address__zip_code=delivery_person.secondary_pincode)
+
         pending_orders = Order.objects.filter(
-            Q(delivery_status='pending') & 
-            Q(shipping_address__city=assigned_city)
+            Q(delivery_status='pending') & pincode_filter
         ).select_related('shipping_address', 'consumer')
-        if pending_orders:
-            print("Pending orders found")
-        else:
-            print("No pending orders found")
+
         active_orders = Order.objects.filter(
             Q(delivery_status__in=['shipped', 'in_transit']) &
             Q(delivery__delivery_person=request.user)
         ).select_related('shipping_address', 'consumer', 'delivery')
-        active_orders_count = active_orders.count()
-    else:
-        print("No city is assigned")
-        # If no city is assigned, don't show any orders
-        pending_orders = Order.objects.none()
-        active_orders = Order.objects.none()
-        active_orders_count = 0
-    context = {
-        'pending_orders': pending_orders,
-        'assigned_city': assigned_city,
-        'active_orders': active_orders,
-        'active_orders_count': active_orders_count,
-    }
-    return render(request, 'Delivery/DeliveryIndex.html', context)
+
+        # Get available pincodes from ShippingAddress
+        available_pincodes = ShippingAddress.objects.values_list('zip_code', flat=True).distinct()
+
+        context = {
+            'pending_orders': pending_orders,
+            'active_orders': active_orders,
+            'delivery_person': delivery_person,
+            'available_pincodes': available_pincodes,
+            'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        }
+        return render(request, 'Delivery/DeliveryIndex.html', context)
+    except JobApplication.DoesNotExist:
+        messages.error(request, 'No approved job application found.')
+        return redirect('home')
+
+@login_required
+def update_delivery_pincodes(request):
+    if request.method == 'POST':
+        primary_pincode = request.POST.get('primary_pincode')
+        secondary_pincode = request.POST.get('secondary_pincode')
+        
+        if primary_pincode:
+            delivery_person = DeliveryPerson.objects.get(user=request.user)
+            delivery_person.primary_pincode = primary_pincode
+            if secondary_pincode and secondary_pincode != primary_pincode:
+                delivery_person.secondary_pincode = secondary_pincode
+            else:
+                delivery_person.secondary_pincode = None
+            delivery_person.save()
+            messages.success(request, 'Delivery areas updated successfully')
+        else:
+            messages.error(request, 'Please select at least one pincode')
+    return redirect('Delivery:deliverindex')
 
 @login_required
 def start_delivery(request, order_id):
@@ -130,4 +156,14 @@ def order_history(request):
         'completed_deliveries': completed_deliveries
     }
     return render(request, 'Delivery/order_history.html', context)
+
+@login_required
+def update_location(request):
+    if request.method == 'POST':
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+        delivery_person = DeliveryPerson.objects.get(user=request.user)
+        delivery_person.update_location(latitude, longitude)
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
 

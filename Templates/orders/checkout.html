@@ -10,6 +10,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+    <meta http-equiv="Content-Security-Policy" content="geolocation 'self'">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,7 +92,7 @@
                             class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                             data-bs-toggle="modal" data-bs-target="#searchModal"><i
                                 class="fas fa-search text-primary"></i></button>
-                        <a href="{% url 'usercart' %}" class="position-relative me-4 my-auto">
+                        <a href="{% url 'Products:usercart' %}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
                             <span
                                 class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
@@ -159,7 +160,7 @@
 
 <div class="container py-5">
     <h2 class="mb-4">Checkout</h2>
-    <form method="post">
+    <form method="post" action="{% url 'orders:checkout' %}">
         {% csrf_token %}
         <div class="row">
             <div class="col-md-6">
@@ -194,6 +195,16 @@
                                 <option value="{{ state.id }}" {% if state == existing_address.state %}selected{% endif %}>{{ state.name }}</option>
                             {% endfor %}
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="location-search" class="form-label">Search Location</label>
+                        <input type="text" class="form-control" id="location-search" placeholder="Search for delivery location">
+                        <div id="map" style="height: 400px; width: 100%; margin-top: 10px;"></div>
+                        <button type="button" class="btn btn-secondary mt-2" onclick="getCurrentLocation()">
+                            Use My Current Location
+                        </button>
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
                     </div>
                 </div>
             </div>
@@ -306,8 +317,8 @@
                         Name</a>, All right reserved.</span>
             </div>
             <div class="col-md-6 my-auto text-center text-md-end text-white">
-                <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
+                <!--/*** This template is free as long as you keep the below author's credit link/attribution link/backlink. ***/-->
+                <!--/*** If you'd like to use the template without the below author's credit link/attribution link/backlink, ***/-->
                 <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
                 Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed By <a
                     class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
@@ -315,6 +326,15 @@
         </div>
     </div>
 </div>
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 <!-- Copyright End -->
 
 
@@ -353,5 +373,175 @@
             toggleShippingForm();  // Initial state
         }
     });
+</script>
+
+<script>
+function loadGoogleMaps() {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initializeMap`;
+    script.defer = true;
+    document.head.appendChild(script);
+}
+
+let map;
+let marker;
+let geocoder;
+
+function initializeMap() {
+    try {
+        geocoder = new google.maps.Geocoder();
+        const defaultLocation = { lat: 10.5276, lng: 76.2144 }; // Default to Kerala
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: defaultLocation,
+            mapTypeControl: true,
+            streetViewControl: false
+        });
+
+        marker = new google.maps.Marker({
+            position: defaultLocation,
+            map: map,
+            draggable: true
+        });
+
+        // Initialize the search box
+        const searchInput = document.getElementById('location-search');
+        const searchBox = new google.maps.places.SearchBox(searchInput);
+
+        // Bias SearchBox results towards current map's viewport
+        map.addListener('bounds_changed', function() {
+            searchBox.setBounds(map.getBounds());
+        });
+
+        // Listen for place selection
+        searchBox.addListener('places_changed', function() {
+            const places = searchBox.getPlaces();
+            if (places.length === 0) return;
+
+            const place = places[0];
+            if (!place.geometry || !place.geometry.location) return;
+
+            // Update map and marker
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+            updateLocationDetails(place);
+        });
+
+        // Add event listener for marker drag end
+        google.maps.event.addListener(marker, 'dragend', function() {
+            const position = marker.getPosition();
+            reverseGeocode(position);
+        });
+    } catch (error) {
+        console.error('Error initializing map:', error);
+    }
+}
+
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                map.setCenter(pos);
+                marker.setPosition(pos);
+                updateLocationDetails(pos);
+            },
+            (error) => {
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert("Location permission was denied. Please enable location access in your browser settings.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Location information is unavailable. Please try again.");
+                        break;
+                    case error.TIMEOUT:
+                        alert("The request to get location timed out. Please try again.");
+                        break;
+                    default:
+                        alert("An unknown error occurred while getting location.");
+                        break;
+                }
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+function updateLocationDetails(place) {
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
+    
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lng;
+
+    // Update address fields
+    let zipCode = '';
+    for (const component of place.address_components) {
+        if (component.types.includes('postal_code')) {
+            zipCode = component.long_name;
+            document.getElementById('zip_code').value = zipCode;
+        }
+        if (component.types.includes('locality')) {
+            document.getElementById('city').value = component.long_name;
+        }
+    }
+    document.getElementById('address').value = place.formatted_address;
+
+    // If no zip code was found in address components, try to get it through reverse geocoding
+    if (!zipCode) {
+        geocoder.geocode({ location: place.geometry.location }, function(results, status) {
+            if (status === 'OK' && results[0]) {
+                for (const component of results[0].address_components) {
+                    if (component.types.includes('postal_code')) {
+                        document.getElementById('zip_code').value = component.long_name;
+                        break;
+                    }
+                }
+            }
+        });
+    }
+}
+
+function reverseGeocode(position) {
+    geocoder.geocode({ location: position }, function(results, status) {
+        if (status === 'OK' && results[0]) {
+            updateLocationDetails({
+                geometry: { 
+                    location: position
+                },
+                address_components: results[0].address_components,
+                formatted_address: results[0].formatted_address
+            });
+        }
+    });
+}
+
+// Load Google Maps when the page is ready
+document.addEventListener('DOMContentLoaded', loadGoogleMaps);
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initializeMap" async defer></script>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const latitude = document.getElementById('latitude').value;
+    const longitude = document.getElementById('longitude').value;
+    
+    if (!latitude || !longitude) {
+        e.preventDefault();
+        alert('Please select a delivery location on the map');
+        return false;
+    }
+});
 </script>
 </body>

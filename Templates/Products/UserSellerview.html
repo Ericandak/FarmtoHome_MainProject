@@ -77,7 +77,7 @@
                             class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                             data-bs-toggle="modal" data-bs-target="#searchModal"><i
                                 class="fas fa-search text-primary"></i></button>
-                        <a href="{% url 'usercart' %}" class="position-relative me-4 my-auto">
+                        <a href="{% url 'Products:usercart' %}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
                             <span
                                 class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
@@ -86,10 +86,10 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hi,{{ username }}</a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                <a href="{% url 'usercart' %}" class="dropdown-item">Cart</a>
+                                <a href="{% url 'Products:usercart' %}" class="dropdown-item">Cart</a>
                                 <a href="{% url 'profile_edit' %}" class="dropdown-item">User Profile</a>
                                 {% if has_seller_role %}
-                                <a href="{%url 'Sellerdetails' %}" class="dropdown-item">Switch to Seller</a>
+                                <a href="{%url 'Products:Sellerdetails' %}" class="dropdown-item">Switch to Seller</a>
                                 {% endif %}
                                 <form action="{% url 'logout' %}" method="POST">
                                     {% csrf_token %}
@@ -167,7 +167,7 @@
                     {% for item in products_with_stock %}
                     <div class="col">
                         <div class="border border-primary rounded position-relative vesitable-item h-100 d-flex flex-column">
-                            <a href="{% url 'product_detailforuser' item.product.slug %}" class="text-decoration-none">
+                            <a href="{% url 'Products:product_detailforuser' item.product.slug %}" class="text-decoration-none">
                                 <div class="vesitable-img" style="height: 220px; overflow: hidden;">
                                     {% if item.product.image %}
                                     <img src="{{ item.product.image.url }}" class="img-fluid w-100 rounded-top" alt="{{ item.product.name }}" style="object-fit: cover; height: 100%;">
@@ -179,7 +179,7 @@
                             <div class="text-white bg-primary px-2 py-1 rounded position-absolute" style="top: 5px; right: 5px; font-size: 0.7rem;">{{ item.product.category.name }}</div>
                             <div class="p-2 rounded-bottom d-flex flex-column flex-grow-1">
                                 <h5 class="fs-6 mb-1">
-                                    <a href="{% url 'product_detailforuser' item.product.slug %}" class="text-dark text-decoration-none">
+                                    <a href="{% url 'Products:product_detailforuser' item.product.slug %}" class="text-dark text-decoration-none">
                                         {{ item.product.name }}
                                     </a>
                                 </h5>
@@ -195,7 +195,7 @@
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     {% if item.stock and item.stock.is_in_stock %}
                                     <span class="text-success" style="font-size: 0.75rem;">In Stock ({{ item.stock.quantity }})</span>
-                                    <a href="{% url 'add_to_cart' item.product.id %}" class="btn btn-sm border border-secondary rounded-pill px-2 py-1 text-primary" style="font-size: 0.75rem;">
+                                    <a href="{% url 'Products:add_to_cart' item.product.id %}" class="btn btn-sm border border-secondary rounded-pill px-2 py-1 text-primary" style="font-size: 0.75rem;">
                                         <i class="fa fa-shopping-bag me-1 text-primary"></i> Add
                                     </a>
                                     {% else %}

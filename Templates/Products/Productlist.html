@@ -14,6 +14,7 @@
     <!-- CSS Files -->
     <link href="{% static '/assets/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static '/assets/css/now-ui-kit.css' %}?v=1.1.0" rel="stylesheet" />
+    <link href="{% static '/assets/css/Cardstyle.css' %}" rel="stylesheet">
     <style>
         .content-wrapper {
             padding-top: 7rem;
@@ -84,7 +85,7 @@
     
     <div class="wrapper">
         <div class="page-header page-header-small" filter-color="orange">
-            <div class="page-header-image" data-parallax="true" style="background-image: url('{% static '/assets/img/bg5.jpg' %}');"></div>
+            <div class="page-header-image" data-parallax="true" style="background-image: url('{% static '/assets/img/crops.jpg' %}');"></div>
             <div class="container">
                 <div class="content-center">
                     <h1 class="title">My Products</h1>
@@ -94,32 +95,80 @@
                 </div>
             </div>
         </div>
-        <div class="section">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Check Fruit Disease</h4>
-                            </div>
-                            <div class="card-body">
-                                <form method="post" enctype="multipart/form-data" action="{% url 'process_image' %}">
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                        <label for="image_upload">Upload an image:</label>
-                                        <input type="file" class="form-control-file" id="image_upload" name="image" accept="image/*" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Process Image</button>
-                                </form>
-                            </div>
-                        </div>
+    </div>
+    <div class="monitoring-header">
+    <div class="leaf-animation">
+        <div class="leaves">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+    </div>
+    <h2 class="animated-title">
+        <span>S</span><span>m</span><span>a</span><span>r</span><span>t</span>
+        <span class="space"></span>
+        <span>C</span><span>r</span><span>o</span><span>p</span>
+        <span class="space"></span>
+        <span>M</span><span>o</span><span>n</span><span>i</span><span>t</span><span>o</span><span>r</span><span>i</span><span>n</span><span>g</span>
+    </h2>
+    <p class="subtitle">Nurturing Growth Through Technology 🌱</p>
+</div>
+    <div class="wrapper1">
+        <div class="container1">
+            <!-- Fruit Disease Detection Card -->
+            <input type="radio" name="slide" id="c1">
+            <label class="card1" for="c1">
+                <div class="row">
+                    <div class="icon1">🍎</div>
+                    <div class="description1">
+                        <h4>Fruit Disease Detection</h4>
+                        <p>Upload fruit images to detect diseases and assess quality</p>
+                        <form method="post" enctype="multipart/form-data" action="{% url 'Products:process_image' %}">
+                            {% csrf_token %}
+                            <input type="file" class="form-control-file mt-2" name="image" accept="image/*">
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">Analyze</button>
+                        </form>
                     </div>
                 </div>
-            </div>
+            </label>
+    
+            <!-- Pest Detection Card -->
+            <input type="radio" name="slide" id="c2">
+            <label class="card1" for="c2">
+                <div class="row">
+                    <div class="icon1">🐛</div>
+                    <div class="description1">
+                        <h4>Pest Detection</h4>
+                        <p>Identify and analyze pest presence in your crops</p>
+                        <form method="post" enctype="multipart/form-data" action="#">
+                            {% csrf_token %}
+                            <input type="file" class="form-control-file mt-2" name="image" accept="image/*">
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">Detect Pests</button>
+                        </form>
+                    </div>
+                </div>
+            </label>
+    
+            <!-- Crop Health Monitoring Card -->
+            <input type="radio" name="slide" id="c3">
+            <label class="card1" for="c3">
+                <div class="row">
+                    <div class="icon1">🌱</div>
+                    <div class="description1">
+                        <h4>Crop Health Monitor</h4>
+                        <p>Monitor overall crop health and growth analysis</p>
+                        <form method="post" enctype="multipart/form-data" action="{% url 'Products:analyze_crop' %}">
+                            {% csrf_token %}
+                            <input type="file" class="form-control-file mt-2" name="crop_image" accept="image/*">
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">Analyze Crop</button>
+                        </form>
+                    </div>
+                </div>
+            </label>
         </div>
-        {% if prediction_result %}
-        <div class="section">
-            <div class="container">
+    </div>
+    <div class="wrapper">
+            {% if prediction_result %}
+            <div class="section">
+                <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-md-6">
                         <div class="alert {% if prediction_result.is_defected %}alert-danger{% else %}alert-success{% endif %}" role="alert">
@@ -135,6 +184,47 @@
                                 {% endif %}
                             </p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if analysis_results %}
+        <div class="analysis-results mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Analysis Results</h5>
+                    
+                    <!-- Health Status -->
+<div class="health-section mb-3">
+    <h6>Health Status</h6>
+    <!-- <div class="progress mb-2">
+        <div class="progress-bar {% if analysis_results.health_analysis.health_score > 0.7 %}bg-success{% elif analysis_results.health_analysis.health_score > 0.4 %}bg-warning{% else %}bg-danger{% endif %}" 
+             role="progressbar" 
+             style="width: {{ analysis_results.health_analysis.health_score|floatformat:2|default:0 }}%">
+            {{ analysis_results.health_analysis.confidence|floatformat:0|default:0 }}%
+        </div>
+    </div> -->
+    <p>Condition: {{ analysis_results.health_analysis.condition|default:"N/A" }}</p>
+    <!-- <p>Confidence: {{ analysis_results.health_analysis.confidence|floatformat:1|default:0 }}%</p> -->
+</div>
+                    
+                    <!-- Growth Stage -->
+                    <div class="growth-section mb-3">
+                        <h6>Growth Stage</h6>
+                        <p>Current Stage: {{ analysis_results.growth_stage.current_stage }}</p>
+                        <p class="text-muted">Days to next stage: {{ analysis_results.growth_stage.estimated_days_to_next }}</p>
+                    </div>
+                    
+                    <!-- Recommendations -->
+                    <div class="recommendations-section">
+                        <h6>Recommendations</h6>
+                        <ul class="list-unstyled">
+                            {% for rec in analysis_results.recommendations %}
+                                <li><i class="fas fa-check-circle text-success"></i> {{ rec }}</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -162,8 +252,8 @@
                                 <p class="card-text"><strong>Price:</strong> ₹{{ product.price }}</p>
                                 <p class="card-text"><strong>Category:</strong> {{ product.category.name }}</p>
                                 <p class="card-text"><strong>Stock:</strong> {{ product.stock.quantity }}</p>
-                                <a href="{% url 'productedit' product.id %}" class="btn btn-primary">Edit</a>
-                                <form method="post" action="{% url 'delete_product' product.id %}" style="display: inline;">
+                                <a href="{% url 'Products:productedit' product.id %}" class="btn btn-primary">Edit</a>
+                                <form method="post" action="{% url 'Products:delete_product' product.id %}" style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
                                 </form>

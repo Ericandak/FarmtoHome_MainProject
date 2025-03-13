@@ -8,6 +8,8 @@ class Notification(models.Model):
         ('product', 'Product Update'),
         ('user', 'User Activity'),
         ('system', 'System Notification'),
+        ('milestone', 'Milestone Achievement'),  # Add this
+        ('coupon', 'Coupon Reward'),  # Add this
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

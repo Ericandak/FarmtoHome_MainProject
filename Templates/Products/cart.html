@@ -89,7 +89,7 @@
                             class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                             data-bs-toggle="modal" data-bs-target="#searchModal"><i
                                 class="fas fa-search text-primary"></i></button>
-                        <a href="{% url 'usercart' %}" class="position-relative me-4 my-auto">
+                        <a href="{% url 'Products:usercart' %}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
                             <span
                                 class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
@@ -385,7 +385,7 @@
         $(document).ready(function () {
             function deletefromcart(itemId) {
                 $.ajax({
-                    url: '{% url "delete_cart" %}',
+                    url: '{% url "Products:delete_cart" %}',
                     type: 'POST',
                     data: JSON.stringify({
                         'item_id': itemId
@@ -420,7 +420,7 @@
 
             function updateCartItem(itemId, action) {
                 $.ajax({
-                    url: '{% url "update_cart_item" %}',
+                    url: '{% url "Products:update_cart_item" %}',
                     type: 'POST',
                     data: JSON.stringify({
                         'item_id': itemId,

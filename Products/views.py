@@ -28,6 +28,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .voice_recognition import VoiceRecognitionService
 import speech_recognition as sr
 from .utils import predict_fruit_disease 
+from .crop_monitoring import CropMonitoringSystem
+from pathlib import Path
 
 def extract_date_from_filename(filename):
     # This pattern looks for date formats like YYYYMMDD_HHMMSS or YYYY-MM-DD_HH-MM-SS
@@ -176,12 +178,16 @@ def seller_home(request):
 @login_required
 def productlist(request):
     products = Product.objects.filter(seller=request.user)
+    analysis_results = request.session.get('analysis_results')
     prediction_result = request.session.pop('prediction_result', None)
     context = {
         'products': products,
         'username': request.user.username,
-        'prediction_result': prediction_result
+        'prediction_result': prediction_result,
+        'analysis_results': analysis_results
     }
+    if 'analysis_results' in request.session:
+        del request.session['analysis_results']
     return render(request, 'Products/Productlist.html', context)
 
 @login_required
@@ -206,7 +212,7 @@ def productedit(request, product_id):
         stock.save()
 
         messages.success(request, 'Product updated successfully.')
-        return redirect('sellerproductlist')
+        return redirect('Products:sellerproductlist')
 
     return render(request, 'Products/productedit.html', {
         'product': product,
@@ -464,8 +470,8 @@ def delete_product(request, product_id):
     if request.method == 'POST':
         product.delete()
         messages.success(request, 'Product deleted successfully.')
-        return redirect('sellerproductlist')  # Redirect to the product list page
-    return redirect('sellerproductlist')
+        return redirect('Products:sellerproductlist')  # Redirect to the product list page
+    return redirect('Products:sellerproductlist')
 
 
 @login_required
@@ -557,10 +563,10 @@ def process_image(request):
                 os.remove(image_path)
                 logger.info(f"Temporary image removed: {image_path}")
 
-        return redirect('sellerproductlist')
+        return redirect('Products:sellerproductlist')
 
     messages.error(request, 'No image file received.')
-    return redirect('sellerproductlist')
+    return redirect('Products:sellerproductlist')
 
 def product_detailforuser(request, slug):
        product = get_object_or_404(Product, slug=slug)
@@ -640,3 +646,33 @@ def change_language(request):
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
     
     return response
+
+def analyze_crop_health(request):
+    if request.method == 'POST' and request.FILES.get('crop_image'):
+        try:
+            image = request.FILES['crop_image']
+            
+            # Save temporary image
+            temp_path = Path(settings.MEDIA_ROOT) / 'temp' / image.name
+            with open(temp_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
+            
+            # Analyze crop
+            monitor = CropMonitoringSystem()
+            results = monitor.analyze_crop(str(temp_path))
+            
+            # Clean up
+            temp_path.unlink()
+            
+            # Store results in session
+            request.session['analysis_results'] = results
+            messages.success(request, 'Crop analysis completed successfully!')
+            
+            return redirect('Products:sellerproductlist')
+            
+        except Exception as e:
+            messages.error(request, f'Error analyzing crop: {str(e)}')
+            return redirect('Products:sellerproductlist')
+    
+    return redirect('Products:sellerproductlist')

@@ -209,7 +209,7 @@
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
                         <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
-                        <a href="shop.html" class="nav-item nav-link">Shop</a>
+                        <a href="{% url 'blogs:feed' %}" class="nav-item nav-link">Blogs</a>
                         <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
@@ -227,7 +227,7 @@
                             class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                             data-bs-toggle="modal" data-bs-target="#searchModal"><i
                                 class="fas fa-search text-primary"></i></button>
-                        <a href="{% url 'usercart' %}" class="position-relative me-4 my-auto">
+                        <a href="{% url 'Products:usercart' %}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
                             <span
                                 class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
@@ -236,7 +236,7 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hi,{{ username }}</a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                <a href="{% url 'usercart' %}" class="dropdown-item">Cart</a>
+                                <a href="{% url 'Products:usercart' %}" class="dropdown-item">Cart</a>
                                 <a href="{% url 'profile_edit' %}" class="dropdown-item">User Profile</a>
                                 {% if has_seller_role %}
                                 <a href="{%url 'Sellerdetails' %}" class="dropdown-item">Switch to Seller</a>
@@ -270,7 +270,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="searchForm" action="{% url 'search_results' %}" method="GET">
+                    <form id="searchForm" action="{% url 'Products:search_results' %}" method="GET">
                         <div class="input-group">
                             <input type="search" name="q" class="form-control" placeholder="Enter keywords"
                                 aria-label="Search" required>
@@ -335,7 +335,7 @@
                             </div>
                             <p class="mb-4">{{ product.description }}</p>
                             <p class="text-primary">Sold By {{ product.seller.username }}</p>
-                            <form action="{% url 'add_to_cart' product.id %}" method="post">
+                            <form action="{% url 'Products:add_to_cart' product.id %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group quantity mb-5" style="width: 100px;">
                                 </div>
@@ -362,7 +362,7 @@
                     <div class="col">
                         <div
                             class="border border-primary rounded position-relative vesitable-item h-100 d-flex flex-column">
-                            <a href="{% url 'product_detail' related_product.id %}" class="text-decoration-none">
+                            <a href="{% url 'Products:product_detail' related_product.id %}" class="text-decoration-none">
                                 <div class="vesitable-img" style="height: 220px; overflow: hidden;">
                                     {% if related_product.image %}
                                     <img src="{{ related_product.image.url }}" class="img-fluid w-100 rounded-top"
@@ -379,7 +379,7 @@
                             </div>
                             <div class="p-2 rounded-bottom d-flex flex-column flex-grow-1">
                                 <h5 class="fs-6 mb-1">
-                                    <a href="{% url 'product_detail' related_product.id %}"
+                                    <a href="{% url 'Products:product_detail' related_product.id %}"
                                         class="text-dark text-decoration-none">
                                         {{ related_product.name }}
                                     </a>
@@ -387,7 +387,7 @@
                                 <p class="small mb-2" style="font-size: 0.75rem;">{{ related_product.description|truncatewords:8 }}</p>
                                 <div class="d-flex justify-content-between align-items-center mt-auto">
                                     <p class="text-dark fw-bold mb-0" style="font-size: 0.9rem;">₹{{ related_product.price }}</p>
-                                    <a href="{% url 'add_to_cart' related_product.id %}"
+                                    <a href="{% url 'Products:add_to_cart' related_product.id %}"
                                         class="btn btn-sm border border-secondary rounded-pill px-2 py-1 text-primary"
                                         style="font-size: 0.75rem;">
                                         <i class="fa fa-shopping-bag me-1 text-primary"></i> Add
@@ -427,7 +427,7 @@
     {% endif %}
         {% if user.is_authenticated %}
         <h3 class="fw-bold mt-5 mb-3">Add Your Review</h3>
-        <form method="post" action="{% url 'add_review' product.id %}" id="review-form">
+        <form method="post" action="{% url 'Products:add_review' product.id %}" id="review-form">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="rating" class="form-label">Rating:</label>

@@ -40,3 +40,36 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} of {self.product.name} in Order {self.order.id}"
+    
+# Add these imports at the top
+from django.db import models
+from django.conf import settings
+import uuid
+
+class Milestone(models.Model):
+    level = models.IntegerField()  # Number of orders needed
+    discount_percentage = models.IntegerField()
+    description = models.CharField(max_length=200)
+    icon = models.CharField(max_length=50, default='fa-trophy')  # FontAwesome icon class
+
+    class Meta:
+        ordering = ['level']
+
+    def __str__(self):
+        return f"Level {self.level} - {self.discount_percentage}% discount"
+
+class UserMilestone(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='achieved_milestones')
+    milestone = models.ForeignKey(Milestone, on_delete=models.CASCADE)
+    achieved_date = models.DateTimeField(auto_now_add=True)
+    coupon_code = models.CharField(max_length=20, unique=True)
+    is_used = models.BooleanField(default=False)
+    expiry_date = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.user.username} - Level {self.milestone.level}"
+
+    def save(self, *args, **kwargs):
+        if not self.coupon_code:
+            self.coupon_code = f"MILE{self.milestone.level}_{uuid.uuid4().hex[:8].upper()}"
+        super().save(*args, **kwargs)

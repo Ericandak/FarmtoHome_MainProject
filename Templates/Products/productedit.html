@@ -85,7 +85,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 ml-auto mr-auto">
-                        <form id="editProductForm" class="contact-form" method="POST" action="{% url 'productedit' product.id %}" enctype="multipart/form-data">
+                        <form id="editProductForm" class="contact-form" method="POST" action="{% url 'Products:productedit' product.id %}" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6">

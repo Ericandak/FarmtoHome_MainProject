@@ -218,7 +218,7 @@
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
                         <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
-                        <a href="shop.html" class="nav-item nav-link">Shop</a>
+                        <a href="{% url 'blogs:feed' %}" class="nav-item nav-link">Blogs</a>
                         <a href="{% url 'orders:user_orders' %}" class="nav-item nav-link">My Orders</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
@@ -236,7 +236,7 @@
                             class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                             data-bs-toggle="modal" data-bs-target="#searchModal"><i
                                 class="fas fa-search text-primary"></i></button>
-                        <a href="{% url 'usercart' %}" class="position-relative me-4 my-auto">
+                        <a href="{% url 'Products:usercart' %}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
                             <span
                                 class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
@@ -259,7 +259,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Hi, {{ username }}</h5>
                                     <p class="card-text">User Role: {% if has_seller_role %}Seller{% else %}Buyer{% endif %}</p>
-                                    <a href="{% url 'usercart' %}" class="btn btn-primary btn-sm mb-2">Cart</a>
+                                    <a href="{% url 'Products:usercart' %}" class="btn btn-primary btn-sm mb-2">Cart</a>
                                     {% if has_seller_role %}
                                     <a href="{% url 'Sellerdetails' %}" class="btn btn-primary btn-sm mb-2">Switch to
                                         Seller</a>
@@ -298,7 +298,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="searchForm" action="{% url 'search_results' %}" method="GET">
+                    <form id="searchForm" action="{% url 'Products:search_results' %}" method="GET">
                         <div class="input-group">
                             <input type="search" name="q" id="searchInput" class="form-control"
                                 placeholder="Enter keywords or click microphone to speak" aria-label="Search" required>
@@ -457,7 +457,7 @@
                                     <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
                                         <div class="card h-100 product-card">
                                             <div class="position-relative">
-                                                <a href="{% url 'product_detail' product.id %}">
+                                                <a href="{% url 'Products:product_detail' product.id %}">
                                                     {% if product.image %}
                                                     <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
                                                     {% else %}
@@ -468,7 +468,7 @@
                                             </div>
                                             <div class="card-body d-flex flex-column">
                                                 <h5 class="card-title">
-                                                    <a href="{% url 'product_detail' product.id %}" class="text-dark text-decoration-none">
+                                                    <a href="{% url 'Products:product_detail' product.id %}" class="text-dark text-decoration-none">
                                                         {{ product.name }}
                                                     </a>
                                                 </h5>
@@ -478,7 +478,7 @@
                                                     <span class="text-primary fw-bold">₹{{ product.price }}/ kg</span>
                                                 </div>
                                                 <div class="d-flex justify-content-end mt-2">
-                                                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-primary btn-sm">Add to cart</a>
+                                                    <a href="{% url 'Products:add_to_cart' product.id %}" class="btn btn-outline-primary btn-sm">Add to cart</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -504,7 +504,7 @@
                                         <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
                                             <div class="card h-100 product-card">
                                                 <div class="position-relative">
-                                                    <a href="{% url 'product_detail' product.id %}">
+                                                    <a href="{% url 'Products:product_detail' product.id %}">
                                                         {% if product.image %}
                                                         <img src="{{ product.image.url }}" class="card-img-top"
                                                             alt="{{ product.name }}">
@@ -517,7 +517,7 @@
                                                 </div>
                                                 <div class="card-body d-flex flex-column">
                                                     <h5 class="card-title">
-                                                        <a href="{% url 'product_detail' product.id %}"
+                                                        <a href="{% url 'Products:product_detail' product.id %}"
                                                             class="text-dark text-decoration-none">
                                                             {{ product.name }}
                                                         </a>
@@ -525,7 +525,7 @@
                                                     <p class="card-text flex-grow-1">{{ product.description|truncatewords:20}}</p>
                                                     <div class="d-flex justify-content-between align-items-center mt-auto">
                                                         <span class="text-primary fw-bold">₹{{ product.price }}/ kg</span>
-                                                        <a href="{% url 'add_to_cart' product.id %}"
+                                                        <a href="{% url 'Products:add_to_cart' product.id %}"
                                                             class="btn btn-outline-primary btn-sm">Add to cart</a>
                                                     </div>
                                                 </div>
@@ -1290,7 +1290,7 @@
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
     <script>
-        var LIVE_SEARCH_URL = '{% url "live_search" %}';
+        var LIVE_SEARCH_URL = '{% url "Products:live_search" %}';
     </script>
     <script src="{% static 'commonjs.js' %}"></script>
     <script>
@@ -1299,5 +1299,4 @@
     </script>
     <script src="{% static 'Products/js/voiceSearch.js' %}"></script>
 </body>
-
 </html>

@@ -19,6 +19,7 @@ def create_order(amount, currency='INR'):
 def initiate_payment(request, order_id):
     try:
         order = Order.objects.get(id=order_id, consumer=request.user)
+        print(f"Order found: {order}")
     except Order.DoesNotExist:
         messages.error(request, 'Order not found.')
         return redirect('orders:checkout')

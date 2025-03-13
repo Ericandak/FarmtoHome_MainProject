@@ -8,7 +8,7 @@ from PIL import Image
 import os
 
 # Update this path to your new training directory
-train_dir = os.path.join(settings.BASE_DIR.parent, 'project docs', 'Training')
+train_dir = r'D:\ajce notes\sem8\django\project docs\Fruit_and_Vegetable_Diseases_Dataset'
 
 def get_class_labels(train_dir):
     class_labels = sorted(os.listdir(train_dir))
