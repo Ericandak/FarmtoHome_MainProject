@@ -10,7 +10,7 @@ from django.db import transaction
 
 def create_order(amount, currency='INR'):
     return client.order.create({
-        'amount': int(amount * 100),  # Razorpay expects amount in paise
+        'amount': int(float(amount )* 100),  # Razorpay expects amount in paise
         'currency': currency,
         'payment_capture': '1'
     })
@@ -23,9 +23,11 @@ def initiate_payment(request, order_id):
     except Order.DoesNotExist:
         messages.error(request, 'Order not found.')
         return redirect('orders:checkout')
+    amount_in_paise = int(float(order.total_amount) * 100)
+    print(f"Amount in paise: {amount_in_paise}")
 
     razorpay_order = create_order(order.total_amount)
-    
+        
     razorpay_method, _ = PaymentMethod.objects.get_or_create(name='Razorpay')
     
     payment = Payment.objects.create(
@@ -41,6 +43,7 @@ def initiate_payment(request, order_id):
         'razorpay_key_id': client.auth[0],
         'callback_url': request.build_absolute_uri(reverse('payments:callback')),
         'amount': order.total_amount,
+        'amount_in_paise': int(float(order.total_amount) * 100),  # Add this line
         'currency': 'INR',
         'payment_id': payment.id,
     }

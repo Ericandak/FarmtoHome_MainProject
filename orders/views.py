@@ -24,7 +24,6 @@ User = get_user_model()
 def checkout(request):
     max_attempts = 3
     attempt = 0
-    
     while attempt < max_attempts:
         try:
             with transaction.atomic():
@@ -34,11 +33,76 @@ def checkout(request):
                 if not cart_items.exists():
                     messages.error(request, 'Your cart is empty')
                     return redirect('Products:usercart')
+                
+                # Calculate cart total first - do this before any other calculations
+# Calculate cart total first - do this before any other calculations
+                cart_total = sum(item.subtotal for item in cart_items)
 
+                # Initialize total_after_discount with cart_total
+                total_after_discount = cart_total
+
+                # Get coupon and discount information from URL parameters
+                coupon_code = request.GET.get('coupon')
+                discount_amount = request.GET.get('discount', '0')
+                final_total = request.GET.get('final_total')
+                print(coupon_code)
+                print(discount_amount)
+                print(final_total)
+                
+                try:
+                    discount = float(discount_amount)
+                except (ValueError, TypeError):
+                    discount = 0
+                
+                # Calculate discount if coupon is valid
+                try:
+                    if final_total:
+                        print(final_total)
+                        total_after_discount = float(final_total)
+                        print(total_after_discount)
+                    else:
+                        total_after_discount = cart_total
+                except (ValueError, TypeError):
+                    total_after_discount = cart_total
+                
+                if coupon_code:
+                    coupon = UserMilestone.objects.filter(
+                        user=request.user,
+                        coupon_code=coupon_code,
+                        is_used=False,
+                        expiry_date__gt=timezone.now()
+                    ).first()
+                    
+                    if coupon:
+                        if final_total:
+                            # Convert final_total to Decimal to match cart_total type
+                            from decimal import Decimal
+                            total_after_discount = Decimal(final_total)
+                            # Calculate what the discount must have been
+                            discount = cart_total - total_after_discount
+                            print(f"Using provided final_total: {total_after_discount}, calculated discount: {discount}")
+                        else:
+                            # Otherwise calculate the discount
+                            print(coupon.milestone.discount_percentage)
+                            # Convert percentage to Decimal before calculation
+                            discount_percentage = Decimal(coupon.milestone.discount_percentage)
+                            discount = (cart_total * discount_percentage) / Decimal('100')
+                            total_after_discount = cart_total - discount
+                            print(f"Cart total: {cart_total}, Discount: {discount}, Total after discount: {total_after_discount}")
+                    print(f"After coupon processing: total_after_discount={total_after_discount}")
                 if request.method == 'POST':
                     # Validate location data
                     latitude = request.POST.get('latitude')
                     longitude = request.POST.get('longitude')
+                    discounted_total = request.POST.get('discounted_total')
+                    coupon_code_post = request.POST.get('coupon_code')
+                    print("discounted:",discounted_total)
+                    if discounted_total:
+                            from decimal import Decimal
+                            total_after_discount = Decimal(discounted_total)
+                            print(f"Using discounted_total from form: {total_after_discount}")
+                    if coupon_code_post:
+                        coupon_code = coupon_code_post
                     
                     if not (latitude and longitude):
                         messages.error(request, 'Please select a delivery location on the map')
@@ -63,6 +127,7 @@ def checkout(request):
                             return redirect('orders:checkout')
                     else:
                         try:
+                            print("total:",total_after_discount)
                             state = State.objects.get(id=request.POST.get('state'))
                             shipping_data = {
                                 'full_name': request.POST.get('full_name'),
@@ -76,17 +141,27 @@ def checkout(request):
                         except State.DoesNotExist:
                             messages.error(request, 'Invalid state selected')
                             return redirect('orders:checkout')
-
+                    print("total before shiiping:",total_after_discount)
                     if all(shipping_data.values()):
-                        order = process_order(request, shipping_data)
+                        # Pass coupon information to process_order
+                        print(f"Before process_order: coupon_code={coupon_code}, total_after_discount={total_after_discount}")
+                        order = process_order(request, shipping_data, coupon_code, total_after_discount)
                         if order:
                             return initiate_payment(request, order.id)
-                        
+                        else:
+                            messages.error(request, 'Error processing order')
+                            return redirect('orders:checkout')
+                    
                     messages.error(request, 'Please fill in all required fields')
+                    return redirect('orders:checkout')
 
+                # For GET requests, show the checkout page with discount applied
                 context = {
                     'cart_items': cart_items,
-                    'total': sum(item.subtotal for item in cart_items),
+                    'subtotal': cart_total,
+                    'discount': discount,
+                    'total': total_after_discount,
+                    'coupon_code': coupon_code,
                     'existing_address': Address_table.objects.filter(user=request.user).first(),
                     'states': State.objects.all(),
                     'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
@@ -129,6 +204,16 @@ def order_payment_callback(request):
             cart = Cart_table.objects.get(user=request.user)
             CartItem_table.objects.filter(cart=cart).delete()
             cart.delete()
+            
+            # Check for milestone achievements
+            if order.payment_status == 'completed':
+                user_milestone = check_order_milestone(request.user)
+                if user_milestone:
+                    messages.success(
+                        request,
+                        f"🎉 Congratulations! You've unlocked a {user_milestone.milestone.discount_percentage}% discount! "
+                        f"Use code: {user_milestone.coupon_code}"
+                    )
 
             return redirect('orders:order_confirmation', order_id=order.id)
         except Order.DoesNotExist:
@@ -140,7 +225,7 @@ def order_payment_callback(request):
     return redirect('orders:checkout')
 
 @transaction.atomic
-def process_order(request, shipping_data):
+def process_order(request, shipping_data, coupon_code=None, discounted_total=None):
     max_attempts = 3
     attempt = 0
     
@@ -162,21 +247,25 @@ def process_order(request, shipping_data):
                     if stock.quantity < cart_item.quantity:
                         raise ValueError(f'Not enough stock for {cart_item.product.name}')
 
-                # Create order
+                # Create order with discounted total if provided
+                if discounted_total is not None:
+                    try:
+                        total_amount = float(discounted_total)
+                        print(f"Using discounted total: {total_amount}")
+                    except (ValueError, TypeError):
+                        total_amount = sum(item.subtotal for item in cart_items)
+                        print(f"Failed to convert discounted total, using original: {total_amount}")
+                else:
+                    total_amount = sum(item.subtotal for item in cart_items)
+                    print(f"No discount provided, using original total: {total_amount}")
+                
+                
                 order = Order.objects.create(
                     consumer=request.user,
                     shipping_address=shipping_address,
-                    total_amount=sum(item.subtotal for item in cart_items)
+                    total_amount=total_amount
                 )
-                if order.status == 'completed':
-                    user_milestone=check_order_milestone(request.user)
-                    if user_milestone:
-                        messages.success(
-                        request,
-                        f"🎉 Congratulations! You've unlocked a {user_milestone.milestone.discount_percentage}% discount! "
-                        f"Use code: {user_milestone.coupon_code}"
-            )
-
+                print(f"Created order with total_amount: {order.total_amount}")
                 # Create order items
                 for cart_item in cart_items:
                     OrderItem.objects.create(
@@ -185,6 +274,18 @@ def process_order(request, shipping_data):
                         quantity=cart_item.quantity,
                         total_price=cart_item.subtotal
                     )
+                
+                # Mark coupon as used if provided
+                if coupon_code:
+                    coupon = UserMilestone.objects.filter(
+                        user=request.user,
+                        coupon_code=coupon_code,
+                        is_used=False
+                    ).first()
+                    
+                    if coupon:
+                        coupon.is_used = True
+                        coupon.save()
 
                 return order
 
@@ -205,6 +306,14 @@ def process_order(request, shipping_data):
 def order_confirmation(request,order_id):
     order = Order.objects.get(id=order_id)
     notify_admin('order_success', f"New order #{order.id} placed for ${order.total_amount}")
+    if order.payment_status == 'completed':
+                    user_milestone=check_order_milestone(request.user)
+                    if user_milestone:
+                        messages.success(
+                        request,
+                        f"🎉 Congratulations! You've unlocked a {user_milestone.milestone.discount_percentage}% discount! "
+                        f"Use code: {user_milestone.coupon_code}"
+                    )
     context = {
         'order': order,
         'order_id': order_id
@@ -310,7 +419,7 @@ def seller_dashboard(request):
 
 def milestone_progress(request):
     user = request.user
-    order_count = user.orders.filter(status='Completed').count()
+    order_count = user.orders.filter(payment_status='completed').count()
     milestones = Milestone.objects.all()
     achieved_milestones = UserMilestone.objects.filter(user=user)
     

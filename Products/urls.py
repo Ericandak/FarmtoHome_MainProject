@@ -25,4 +25,6 @@ urlpatterns = [
     path('product/<slug:slug>/', views.product_detailforuser, name='product_detailforuser'),
     path('voice-search/', views.voice_search, name='voice_search'),
     path('analyze-crop/', views.analyze_crop_health, name='analyze_crop'),
+    path('apply-coupon/', views.apply_coupon, name='apply_coupon'),
+    path('analyze-soil/', views.analyze_soil, name='analyze_soil'),
 ]

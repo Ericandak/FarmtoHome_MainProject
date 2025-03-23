@@ -26,6 +26,7 @@ from django.template.loader import render_to_string
 import json
 from django.conf import settings
 from notifications.models import Notification
+from orders.models import Milestone, UserMilestone
 from django.utils.html import strip_tags
 from django.utils import timezone
 from .models import LicenseAuthenticationRequest
@@ -407,6 +408,26 @@ def profile_update(request):
             user = get_object_or_404(User, username=username)
             address = get_object_or_404(Address_table, user=user)
             state = address.state if address else None
+
+            milestones = Milestone.objects.all()
+            achieved_milestones = UserMilestone.objects.filter(user=user)
+            order_count = user.orders.filter(payment_status='completed',delivery_status='delivered').count()
+            
+            # Add active coupons
+            active_coupons = UserMilestone.objects.filter(
+                user=user,
+                is_used=False,
+                expiry_date__gt=timezone.now()
+            )
+            
+            # Add notifications
+            unread_notifications_count = Notification.objects.filter(
+                user=user,
+                is_read=False
+            ).count()
+            notifications = Notification.objects.filter(
+                user=user).order_by('-created_at')[:10]
+
         except (User.DoesNotExist, Address_table.DoesNotExist):
             user = None
             address = None
@@ -443,7 +464,13 @@ def profile_update(request):
         'user': user,
         'address': address,
         'state': state,
-        'countries': countries
+        'countries': countries,
+        'milestones': milestones,
+        'achieved_milestones': achieved_milestones,
+        'order_count': order_count,
+        'active_coupons': active_coupons,
+        'notifications': notifications,
+        'unread_notifications_count': unread_notifications_count,
     }
     return render(request, 'Users/User_profile.html', context)
 

@@ -166,7 +166,7 @@
 <script>
 var options = {
     "key": "{{ razorpay_key_id }}",
-    "amount": "{{ amount|multiply:100|floatformat:0 }}",
+    "amount": "{{ amount_in_paise }}",  // Use the paise amount directly
     "currency": "{{ currency }}",
     "name": "Your Company Name",
     "description": "Order Payment",

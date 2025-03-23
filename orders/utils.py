@@ -9,7 +9,7 @@ def check_order_milestone(user):
     Check if user has reached a milestone and create rewards
     """
     # Get total completed orders for the user
-    order_count = user.orders.filter(status='Completed').count()
+    order_count = user.orders.filter(payment_status='completed').count()
     
     # Define milestone levels if not in database
     default_milestones = {

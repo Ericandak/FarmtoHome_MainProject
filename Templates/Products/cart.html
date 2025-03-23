@@ -8,6 +8,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+    <meta name="csrf-token" content="{{ csrf_token }}">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -232,8 +233,15 @@
                 </table>
             </div>
             <div class="mt-5">
-                <input type="text" class="form-control w-50 d-inline-block" placeholder="Coupon Code">
-                <button class="btn btn-outline-primary btn-sm" type="button">Apply Coupon</button>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="coupon-code" placeholder="Enter Coupon Code">
+                            <button class="btn btn-primary" type="button" id="apply-coupon">Apply Coupon</button>
+                        </div>
+                        <div id="coupon-message" class="mt-2"></div>
+                    </div>
+                </div>
             </div>
             <div class="row justify-content-end mt-5">
                 <div class="col-lg-4">
@@ -241,16 +249,17 @@
                         <h3 class="mb-4">Cart Summary</h3>
                         <div class="d-flex justify-content-between mb-3">
                             <h6>Subtotal</h6>
-                            <h6>$2.99</h6>
+                            <h6 id="cart-subtotal">₹{{ total }}</h6>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
-                            <h6>Shipping</h6>
-                            <h6>$3.00</h6>
+                            <h6>Discount</h6>
+                            <h6 id="discount-amount">₹0.00</h6>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <h5>Total</h5>
                             <h5 id="cart-total">₹{{ total }}</h5>
                         </div>
+                        <input type="hidden" id="applied-coupon" name="applied_coupon">
                         <a href="{% url 'orders:checkout' %}" class="btn btn-primary btn-block mt-3">Proceed to Checkout</a>
                     </div>
                 </div>
@@ -378,6 +387,7 @@
     <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
     <script src="{% static 'lib/lightbox/js/lightbox.min.js'%}"></script>
     <script src="{% static 'lib/owlcarousel/owl.carousel.min.js'%}"></script>
+    <script src="{% static 'assets/js/Coupon.js' %}"></script>
 
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
@@ -464,6 +474,22 @@
                 var action = $(this).hasClass('btn-plus') ? 'increase' : 'decrease';
                 updateCartItem(itemId, action);
             });
+        });
+    </script>
+    <script>
+        // Add this at the bottom of your cart.html
+        $(document).ready(function() {
+            // Check if there's a coupon applied
+            const appliedCoupon = $('#applied-coupon').val();
+            if (appliedCoupon) {
+                console.log('Coupon applied:', {
+                    coupon: appliedCoupon,
+                    discount: $('#discount-amount').text(),
+                    finalTotal: $('#cart-total').text()
+                });
+            } else {
+                console.log('No coupon applied');
+            }
         });
     </script>
 </body>

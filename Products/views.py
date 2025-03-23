@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.utils import timezone
 from django.http import JsonResponse
+from orders.models import UserMilestone
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 import json
@@ -180,14 +181,37 @@ def productlist(request):
     products = Product.objects.filter(seller=request.user)
     analysis_results = request.session.get('analysis_results')
     prediction_result = request.session.pop('prediction_result', None)
+    
+    # Get recommendations if available
+    recommendations = []
+    if analysis_results and isinstance(analysis_results, dict):
+        if 'soil_analysis' in analysis_results:
+            soil_type = analysis_results['soil_analysis'].get('soil_type')
+            characteristics = analysis_results['soil_analysis'].get('characteristics', {})
+            
+            # Add soil-specific recommendations
+            if characteristics.get('fertility') == 'Low':
+                recommendations.append("Consider adding organic matter to improve soil fertility")
+            if characteristics.get('water_retention') == 'Poor':
+                recommendations.append("Implement mulching to improve water retention")
+                
+            # Add crop compatibility recommendations
+            suitable_crops = characteristics.get('suitable_crops', [])
+            if suitable_crops:
+                recommendations.append(f"Suitable crops for this soil: {', '.join(suitable_crops)}")
+    
     context = {
         'products': products,
         'username': request.user.username,
         'prediction_result': prediction_result,
-        'analysis_results': analysis_results
+        'analysis_results': analysis_results,
+        'recommendations': recommendations
     }
+    
+    # Clear the session data after displaying
     if 'analysis_results' in request.session:
         del request.session['analysis_results']
+        
     return render(request, 'Products/Productlist.html', context)
 
 @login_required
@@ -673,6 +697,89 @@ def analyze_crop_health(request):
             
         except Exception as e:
             messages.error(request, f'Error analyzing crop: {str(e)}')
+            return redirect('Products:sellerproductlist')
+    
+    return redirect('Products:sellerproductlist')
+
+def apply_coupon(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            coupon_code = data.get('coupon_code')
+            
+            # Try to find a valid milestone coupon
+            coupon = UserMilestone.objects.filter(
+                user=request.user,
+                coupon_code=coupon_code,
+                is_used=False,
+                expiry_date__gt=timezone.now()
+            ).first()
+            
+            if not coupon:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid or expired coupon code'
+                })
+            
+            # Get cart total
+            cart = Cart_table.objects.get(user=request.user)
+            cart_items = CartItem_table.objects.filter(cart=cart)
+            subtotal = sum(item.subtotal for item in cart_items)
+            
+            # Calculate discount
+            discount_percentage = coupon.milestone.discount_percentage
+            discount_amount = (subtotal * discount_percentage) / 100
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': f'Coupon applied successfully! {discount_percentage}% discount',
+                'subtotal': str(subtotal),
+                'discount': str(discount_amount),
+                'coupon_id': coupon.id
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            })
+    
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Invalid request method'
+    })
+
+def analyze_soil(request):
+    if request.method == 'POST' and request.FILES.get('soil_image'):
+        try:
+            soil_image = request.FILES['soil_image']
+            
+            # Save temporary image
+            temp_path = Path(settings.MEDIA_ROOT) / 'temp' / soil_image.name
+            temp_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(temp_path, 'wb+') as destination:
+                for chunk in soil_image.chunks():
+                    destination.write(chunk)
+            
+            # Analyze soil
+            monitor = CropMonitoringSystem()
+            soil_results = monitor.analyze_soil(str(temp_path))
+            
+            # Clean up
+            temp_path.unlink()
+            
+            # Store results in session
+            if 'analysis_results' not in request.session:
+                request.session['analysis_results'] = {}
+            
+            request.session['analysis_results']['soil_analysis'] = soil_results
+            messages.success(request, 'Soil analysis completed successfully!')
+            
+            return redirect('Products:sellerproductlist')
+            
+        except Exception as e:
+            messages.error(request, f'Error analyzing soil: {str(e)}')
             return redirect('Products:sellerproductlist')
     
     return redirect('Products:sellerproductlist')

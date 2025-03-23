@@ -114,7 +114,7 @@
     <div class="wrapper1">
         <div class="container1">
             <!-- Fruit Disease Detection Card -->
-            <input type="radio" name="slide" id="c1">
+            <input type="radio" name="slide" id="c1" checked>
             <label class="card1" for="c1">
                 <div class="row">
                     <div class="icon1">🍎</div>
@@ -134,24 +134,25 @@
             <input type="radio" name="slide" id="c2">
             <label class="card1" for="c2">
                 <div class="row">
-                    <div class="icon1">🐛</div>
+                    <div class="icon1">🌱</div>
                     <div class="description1">
-                        <h4>Pest Detection</h4>
-                        <p>Identify and analyze pest presence in your crops</p>
-                        <form method="post" enctype="multipart/form-data" action="#">
+                        <h4>Soil Analysis</h4>
+                        <p>Analyze soil type and get crop recommendations</p>
+                        <form action="{% url 'Products:analyze_soil' %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
-                            <input type="file" class="form-control-file mt-2" name="image" accept="image/*">
-                            <button type="submit" class="btn btn-primary btn-sm mt-2">Detect Pests</button>
+                            <input type="file" class="form-control-file mt-2" name="soil_image" accept="image/*" required>
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">Analyze Soil</button>
                         </form>
                     </div>
                 </div>
             </label>
+
     
             <!-- Crop Health Monitoring Card -->
-            <input type="radio" name="slide" id="c3">
-            <label class="card1" for="c3">
+            <input type="radio" name="slide" id="c4">
+            <label class="card1" for="c4">
                 <div class="row">
-                    <div class="icon1">🌱</div>
+                    <div class="icon1">🌾</div>
                     <div class="description1">
                         <h4>Crop Health Monitor</h4>
                         <p>Monitor overall crop health and growth analysis</p>
@@ -190,46 +191,60 @@
         </div>
         {% endif %}
 
-        {% if analysis_results %}
+    {% if analysis_results %}
         <div class="analysis-results mt-3">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Analysis Results</h5>
                     
                     <!-- Health Status -->
-<div class="health-section mb-3">
-    <h6>Health Status</h6>
-    <!-- <div class="progress mb-2">
-        <div class="progress-bar {% if analysis_results.health_analysis.health_score > 0.7 %}bg-success{% elif analysis_results.health_analysis.health_score > 0.4 %}bg-warning{% else %}bg-danger{% endif %}" 
-             role="progressbar" 
-             style="width: {{ analysis_results.health_analysis.health_score|floatformat:2|default:0 }}%">
-            {{ analysis_results.health_analysis.confidence|floatformat:0|default:0 }}%
-        </div>
-    </div> -->
-    <p>Condition: {{ analysis_results.health_analysis.condition|default:"N/A" }}</p>
-    <!-- <p>Confidence: {{ analysis_results.health_analysis.confidence|floatformat:1|default:0 }}%</p> -->
-</div>
-                    
-                    <!-- Growth Stage -->
-                    <div class="growth-section mb-3">
-                        <h6>Growth Stage</h6>
-                        <p>Current Stage: {{ analysis_results.growth_stage.current_stage }}</p>
-                        <p class="text-muted">Days to next stage: {{ analysis_results.growth_stage.estimated_days_to_next }}</p>
-                    </div>
-                    
-                    <!-- Recommendations -->
-                    <div class="recommendations-section">
-                        <h6>Recommendations</h6>
-                        <ul class="list-unstyled">
-                            {% for rec in analysis_results.recommendations %}
-                                <li><i class="fas fa-check-circle text-success"></i> {{ rec }}</li>
-                            {% endfor %}
-                        </ul>
+                    <div class="analysis-results card mb-4">
+                        <div class="card-header">
+                            <h4>Analysis Results</h4>
+                        </div>
+                        <div class="card-body">
+                            {% if analysis_results.soil_analysis %}
+                                <div class="soil-analysis">
+                                    <h5>Soil Analysis Results</h5>
+                                    <p><strong>Soil Type:</strong> {{ analysis_results.soil_analysis.soil_type }}</p>
+                                    <p><strong>Confidence:</strong> {{ analysis_results.soil_analysis.confidence|floatformat:2 }}%</p>
+                                    
+                                    {% if analysis_results.soil_analysis.characteristics %}
+                                        <h6>Soil Characteristics:</h6>
+                                        <ul>
+                                            <li><strong>Fertility:</strong> {{ analysis_results.soil_analysis.characteristics.fertility }}</li>
+                                            <li><strong>Water Retention:</strong> {{ analysis_results.soil_analysis.characteristics.water_retention }}</li>
+                                            <li><strong>pH Range:</strong> {{ analysis_results.soil_analysis.characteristics.ph_range }}</li>
+                                            <li><strong>Suitable Crops:</strong> {{ analysis_results.soil_analysis.characteristics.suitable_crops|join:", " }}</li>
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
+                            {% if analysis_results.health_analysis %}
+                                <div class="health-analysis">
+                                    <h5>Crop Health Analysis</h5>
+                                    <p><strong>Crop Type:</strong> {{ analysis_results.health_analysis.crop_type }}</p>
+                                    <p><strong>Disease:</strong> {{ analysis_results.health_analysis.disease }}</p>
+                                    <p><strong>Confidence:</strong> {{ analysis_results.health_analysis.confidence|floatformat:2 }}%</p>
+                                    <p><strong>Severity:</strong> {{ analysis_results.health_analysis.severity }}</p>
+                                    
+                                    {% if analysis_results.recommendations %}
+                                        <h6>Recommendations:</h6>
+                                        <ul>
+                                            {% for recommendation in analysis_results.recommendations %}
+                                                <li>{{ recommendation }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
+    {% endif %}
         
         <div class="section">
             <div class="container">
