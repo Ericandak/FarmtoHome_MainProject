@@ -207,7 +207,7 @@
                                 <div class="soil-analysis">
                                     <h5>Soil Analysis Results</h5>
                                     <p><strong>Soil Type:</strong> {{ analysis_results.soil_analysis.soil_type }}</p>
-                                    <p><strong>Confidence:</strong> {{ analysis_results.soil_analysis.confidence|floatformat:2 }}%</p>
+                                    <!-- <p><strong>Confidence:</strong> {{ analysis_results.soil_analysis.confidence|floatformat:2 }}%</p> -->
                                     
                                     {% if analysis_results.soil_analysis.characteristics %}
                                         <h6>Soil Characteristics:</h6>
@@ -226,7 +226,7 @@
                                     <h5>Crop Health Analysis</h5>
                                     <p><strong>Crop Type:</strong> {{ analysis_results.health_analysis.crop_type }}</p>
                                     <p><strong>Disease:</strong> {{ analysis_results.health_analysis.disease }}</p>
-                                    <p><strong>Confidence:</strong> {{ analysis_results.health_analysis.confidence|floatformat:2 }}%</p>
+                                    <!-- <p><strong>Confidence:</strong> {{ analysis_results.health_analysis.confidence|floatformat:2 }}%</p> -->
                                     <p><strong>Severity:</strong> {{ analysis_results.health_analysis.severity }}</p>
                                     
                                     {% if analysis_results.recommendations %}

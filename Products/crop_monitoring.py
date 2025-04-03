@@ -6,15 +6,13 @@ from django.conf import settings
 
 class CropMonitoringSystem:
     def __init__(self):
-        # Load models with fallbacks
-
         try:
-                self.crop_model = tf.keras.models.load_model('models/crop_health_model.h5')
-                self.img_size = 160  # Changed from 160 to 128
-                print("Loaded original crop model")
+            self.crop_model = tf.keras.models.load_model('models/fast_crop_model.keras')
+            self.img_size = 128  # Changed to 128x128 to match model's expected input
+            print("Loaded fast crop model")
         except:
-                self.crop_model = None
-                print("WARNING: No crop model found")
+            self.crop_model = None
+            print("WARNING: No crop model found")
         
         try:
             self.soil_model = tf.keras.models.load_model('models/fast_soil_model.keras')
@@ -23,9 +21,7 @@ class CropMonitoringSystem:
         except:
             self.soil_model = None
             print("No soil model found")
-        
-        self.best_model = tf.keras.models.load_model('models/best_crop_model.keras')
-        
+
         self.growth_stages = {
             'Rice': ['Seedling', 'Tillering', 'Stem Extension', 'Heading', 'Ripening'],
             'Tomato': ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Ripening'],
@@ -115,58 +111,128 @@ class CropMonitoringSystem:
             }
         }
 
+        # Define crop types and their diseases
+        self.crop_diseases = {
+            'Tomato': [
+                'Tomato_Bacterial_spot',
+                'Tomato_Early_blight',
+                'Tomato_Late_blight',
+                'Tomato_Leaf_Mold',
+                'Tomato_Septoria_leaf_spot',
+                'Tomato_Spider_mites',
+                'Tomato_Target_Spot',
+                'Tomato_Yellow_Leaf_Curl_Virus',
+                'Tomato_mosaic_virus',
+                'Tomato_healthy'
+            ],
+            'Potato': [
+                'Potato_Early_blight',
+                'Potato_Late_blight',
+                'Potato_healthy'
+            ],
+            'Pepper': [
+                'Pepper_Bacterial_spot',
+                'Pepper_healthy'
+            ],
+            'Rice': [
+                'Rice_Bacterial_leaf_blight',
+                'Rice_Brown_spot',
+                'Rice_Leaf_smut',
+                'Rice_healthy'
+            ]
+        }
+
+        # Disease recommendations dictionary
+        self.disease_recommendations = {
+            'Bacterial_spot': [
+                "Remove infected plants immediately",
+                "Apply copper-based bactericides",
+                "Ensure proper plant spacing for air circulation",
+                "Avoid overhead irrigation to prevent spread"
+            ],
+            'Early_blight': [
+                "Remove infected leaves",
+                "Apply fungicide treatments",
+                "Ensure proper plant spacing",
+                "Water at the base to keep foliage dry"
+            ],
+            'Late_blight': [
+                "Remove infected plants immediately",
+                "Apply preventative fungicides",
+                "Improve drainage",
+                "Rotate crops in future seasons"
+            ],
+            'Leaf_Mold': [
+                "Improve air circulation",
+                "Reduce humidity",
+                "Apply appropriate fungicides",
+                "Remove affected leaves"
+            ],
+            'healthy': [
+                "Continue regular maintenance",
+                "Monitor for early signs of disease",
+                "Maintain proper irrigation",
+                "Follow fertilization schedule"
+            ]
+        }
+
     def analyze_crop(self, image_path):
         """Analyze crop health"""
         try:
-            # Load and preprocess image using TensorFlow instead of OpenCV
+            # Load and preprocess image with correct size (128x128)
             img = tf.keras.preprocessing.image.load_img(
                 image_path, 
-                target_size=(160, 160)  # Use 160x160 as that's what we set in __init__
+                target_size=(128, 128)  # Changed to 128x128
             )
             img_array = tf.keras.preprocessing.image.img_to_array(img)
             img_array = img_array / 255.0
             img_array = np.expand_dims(img_array, axis=0)
             
-            # Make prediction
+            # Get prediction
             prediction = self.crop_model.predict(img_array)
-            
-            # Process results using the disease analysis logic
             class_index = np.argmax(prediction[0])
             confidence = float(prediction[0][class_index])
             
-            # Get disease name if available
-            if hasattr(self, 'class_names') and class_index < len(self.class_names):
-                disease = self.class_names[class_index]
-            else:
-                disease = f"Unknown (Class {class_index})"
+            # Define disease classes
+            disease_classes = [
+                'Tomato_Bacterial_spot',
+                'Tomato_Early_blight',
+                'Tomato_Late_blight',
+                'Tomato_Leaf_Mold',
+                'Tomato_Septoria_leaf_spot',
+                'Tomato_Spider_mites',
+                'Tomato_Target_Spot',
+                'Tomato_Yellow_Leaf_Curl_Virus',
+                'Tomato_mosaic_virus',
+                'Tomato_healthy'
+            ]
             
-            # Get crop type from disease name
-            if 'Rice' in disease:
-                crop_type = 'Rice'
-            elif 'Tomato' in disease:
-                crop_type = 'Tomato'
-            elif 'Potato' in disease:
-                crop_type = 'Potato'
-            elif 'Pepper' in disease:
-                crop_type = 'Pepper'
-            else:
-                crop_type = 'Unknown'
+            # Get disease name
+            disease = disease_classes[class_index] if class_index < len(disease_classes) else "Unknown"
             
-            # Calculate severity based on confidence
-            severity = 'High' if confidence < 0.3 else 'Medium' if confidence < 0.7 else 'Low'
+            # Extract crop type and clean disease name
+            crop_type = disease.split('_')[0]
+            clean_disease = '_'.join(disease.split('_')[1:])
+            
+            # Determine severity
+            if confidence > 0.8:
+                severity = 'Low'
+            elif confidence > 0.6:
+                severity = 'Moderate'
+            else:
+                severity = 'High'
+            
+            # Get recommendations
+            recommendations = self._get_recommendations(clean_disease)
             
             return {
                 'health_analysis': {
                     'crop_type': crop_type,
-                    'disease': disease,
-                    'confidence': confidence * 100,  # Convert to percentage
+                    'disease': clean_disease,
+                    'confidence': confidence * 100,
                     'severity': severity
                 },
-                'recommendations': [
-                    f"Detected {disease} with {confidence*100:.1f}% confidence",
-                    f"Disease severity: {severity}",
-                    "Consider consulting with an agricultural expert for specific treatment options"
-                ]
+                'recommendations': recommendations
             }
             
         except Exception as e:
@@ -178,7 +244,12 @@ class CropMonitoringSystem:
                     'confidence': 0,
                     'severity': 'Unknown'
                 },
-                'recommendations': ['Unable to analyze crop due to an error']
+                'recommendations': [
+                    'Unable to analyze crop. Please ensure:',
+                    '- The image is clear and well-lit',
+                    '- The leaf is centered in the image',
+                    '- The image shows typical disease symptoms'
+                ]
             }
 
     def analyze_soil(self, image_path):
@@ -241,25 +312,20 @@ class CropMonitoringSystem:
                 }
             }
 
-    def _get_recommendations(self, soil_type, crop_health_score):
-        """Generate recommendations based on soil type and crop health"""
-        recommendations = []
+    def _get_recommendations(self, disease):
+        """Get recommendations based on disease"""
+        # Find matching recommendations
+        for disease_key, recs in self.disease_recommendations.items():
+            if disease_key.lower() in disease.lower():
+                return recs
         
-        # Add soil-specific recommendations
-        if soil_type in self.soil_characteristics:
-            soil_info = self.soil_characteristics[soil_type]
-            recommendations.append(f"Soil Type: {soil_type} - Best suited for: {', '.join(soil_info['suitable_crops'])}")
-            
-            if soil_info['fertility'] == 'Low':
-                recommendations.append("Consider adding organic fertilizers to improve soil fertility")
-            if soil_info['water_retention'] == 'Poor':
-                recommendations.append("Implement mulching to improve water retention")
-        
-        # Add crop health recommendations
-        if crop_health_score < 0.7:
-            recommendations.append("Crop health needs attention - Consider increasing monitoring frequency")
-        
-        return recommendations
+        # Default recommendations if no match found
+        return [
+            "Consult with an agricultural expert",
+            "Monitor the affected area closely",
+            "Consider soil testing",
+            "Review irrigation practices"
+        ]
 
 def analyze_farm_condition(crop_image_path, soil_image_path):
     monitoring_system = CropMonitoringSystem()
@@ -271,7 +337,7 @@ def analyze_farm_condition(crop_image_path, soil_image_path):
     )
     
     # Get recommendations
-    recommendations = monitoring_system._get_recommendations(analysis['soil_analysis']['soil_type'], analysis['crop_analysis']['health_score'])
+    recommendations = monitoring_system._get_recommendations(analysis['crop_analysis']['disease'])
     
     return {
         'analysis': analysis,
